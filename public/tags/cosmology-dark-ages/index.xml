@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>(Cosmology:) Dark Ages | Hugo Academic CV Theme</title>
+    <link>http://localhost:1313/tags/cosmology-dark-ages/</link>
+      <atom:link href="http://localhost:1313/tags/cosmology-dark-ages/index.xml" rel="self" type="application/rss+xml" />
+    <description>(Cosmology:) Dark Ages</description>
+    <generator>Hugo Blox Builder (https://hugoblox.com)</generator><language>en-us</language><lastBuildDate>Tue, 01 Sep 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>http://localhost:1313/media/icon_hu8bdfa108c5f8f76badc4f12ac7f527c0_1943280_512x512_fill_lanczos_center_3.png</url>
+      <title>(Cosmology:) Dark Ages</title>
+      <link>http://localhost:1313/tags/cosmology-dark-ages/</link>
+    </image>
+    
+    <item>
+      <title>Probing the high-z IGM with the hyperfine transition of $^3$He$^&#43;$</title>
+      <link>http://localhost:1313/publication/khullar-2020/</link>
+      <pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/publication/khullar-2020/</guid>
+      <description>&lt;p&gt;Add the &lt;strong&gt;full text&lt;/strong&gt; or &lt;strong&gt;supplementary notes&lt;/strong&gt; for the publication here using Markdown formatting.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
