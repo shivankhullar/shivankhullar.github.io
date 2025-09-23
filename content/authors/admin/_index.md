@@ -20,7 +20,7 @@ superuser: true
 highlight_name: true
 
 # Role/position/tagline
-role: PhD Student 
+role: Flatiron Research Fellow
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
@@ -175,6 +175,6 @@ awards:
 
 ## About Me
 
-<font color='white'> Hello! I'm a Flatiron Research Fellow (FRF) at the Center for Computational Astrophysics, Flatiron Institute. Before this, I obtained my PhD from the University of Toronto. I’m broadly interested in simulating the universe. My research focuses on the formation of stars in our Universe. My research focuses on the role of turbulence, magnetic fields and stellar feedback in the star formation process from galactic disks to protoplanetary disks. I’m interested in questions related to star formation in the nearby and early universe. 
+<font color='white'> Hello! I'm a Flatiron Research Fellow (FRF) at the Center for Computational Astrophysics (CCA), Flatiron Institute. Before this, I obtained my PhD from the University of Toronto. I’m broadly interested in simulating the universe. My research focuses on the formation of stars in our Universe. My research focuses on the role of turbulence, magnetic fields and stellar feedback in the star formation process from galactic disks to protoplanetary disks. I’m interested in questions related to star formation in the nearby and early universe. 
 In my free time, I enjoy playing and watching football (soccer), watching documentaries, hiking and exploring our planet.</font>
 
