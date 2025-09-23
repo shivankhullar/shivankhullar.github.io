@@ -20,7 +20,7 @@ sections:
       # Show a call-to-action button under your biography? (optional)
       button1:
         text: CV
-        url: uploads/resume.pd
+        url: uploads/resume.pdf
       button2:
         text: NASA/ADS Publication List 
         url: https://ui.adsabs.harvard.edu/search/filter_author_facet_hier_fq_author=AND&filter_author_facet_hier_fq_author=author_facet_hier%3A%221%2FKhullar%2C%20S%2FKhullar%2C%20Shivan%22&fq=%7B!type%3Daqp%20v%3D%24fq_author%7D&fq_author=(author_facet_hier%3A%221%2FKhullar%2C%20S%2FKhullar%2C%20Shivan%22)&p_=0&q=author%3A%22Khullar%2C%20Shivan%22&sort=date%20desc%2C%20bibcode%20desc
