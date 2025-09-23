@@ -24,16 +24,14 @@ role: PhD Student
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
-  - name: University of Toronto
-    url: https://www.astro.utoronto.ca
-  - name: CITA
-    url: https://www.cita.utoronto.ca
+  - name: Center for Computational Astrophysics, Flatiron Institute
+    url: https://www.simonsfoundation.org/flatiron/center-for-computational-astrophysics/
 
 # Social network links
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
   - icon: at-symbol
-    url: 'mailto:shivan.khullar@mail.utoronto.ca'
+    url: 'mailto:skhullar@flatironinstitute.org'
     label: E-mail Me
   - icon: brands/x
     url: https://x.com/KhullarShivan
@@ -65,10 +63,10 @@ education:
   #  button:
   #    text: 'Read Thesis'
   #    url: 'https://example.com'
-  - area: Ph.D. Astronomy & Astrophysics [2019-]
+  - area: Ph.D. Astronomy & Astrophysics [2019-2025]
     institution: University of Toronto
     date_start: 2019-09-01
-    date_end: 2025-08-01
+    date_end: 2025-08-22
   - area: M.Sc. (Hons.) Physics [2014-2019]
     institution: Birla Institute of Technology and Science, Pilani - Goa
     date_start: 2014-08-01
@@ -177,6 +175,6 @@ awards:
 
 ## About Me
 
-<font color='white'> Hello! I'm a PhD student in the Department of Astronomy and Astrophysics at the University of Toronto and the Canadian Institute for Theoretical Astrophysics. I’m broadly interested in simulating the universe. My research focuses on the formation of stars in our Universe. I'm particularly interested in the role of turbulence, magnetic fields and stellar feedback in the star formation process from galactic disks to protoplanetary disks. I’m interested in questions related to star formation in the nearby and early universe. 
+<font color='white'> Hello! I'm a Flatiron Research Fellow (FRF) at the Center for Computational Astrophysics, Flatiron Institute. Before this, I obtained my PhD from the University of Toronto. I’m broadly interested in simulating the universe. My research focuses on the formation of stars in our Universe. My research focuses on the role of turbulence, magnetic fields and stellar feedback in the star formation process from galactic disks to protoplanetary disks. I’m interested in questions related to star formation in the nearby and early universe. 
 In my free time, I enjoy playing and watching football (soccer), watching documentaries, hiking and exploring our planet.</font>
 
