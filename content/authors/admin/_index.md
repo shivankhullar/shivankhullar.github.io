@@ -20,7 +20,7 @@ superuser: true
 highlight_name: true
 
 # Role/position/tagline
-role: Flatiron Research Fellow
+role: Flatiron Research Fellow (FRF)
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
