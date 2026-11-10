@@ -29,6 +29,18 @@ This is a collection of movies I made from the simulations I use for my research
     {{</* youtube w7Ft2ymGmfc */>}}
 -->
 
+## Pop III star formation using FORGE'd in FIRE
+
+This movie zooms in to the formation of the first stars in a Milky Way-like progenitor halo. We follow the collapse of gas over 10 orders of magnitude in spatial scales. The movie also shows the subsequent disk formation, fragmentation and chaotic dynamics 
+
+{{< youtube rmUCKCsnPPQ >}}
+
+## Zooming in to a MW-like GMC
+
+This movie zooms in to dense gas in a GMC in a Milky-Way like galaxy that is further embedded in a large-scale cosmological environment. 
+
+{{< youtube YZrkCZwzEkk >}}
+
 ## The ISM in a FIRE-2 galaxy
 
 This movie shows the evolution of a galaxy (left) and a zoomed-in patch (right). The circles on the right represent young star clusters (less than 8 Myr old), and they turn from blue to white as they age. This simulation was perfomed using the GIZMO MFM MHD code.
@@ -59,17 +71,5 @@ This movie follows a 0.1 pc region around the maximum density in the simulation.
 This movie shows the collapse of a GMC from kpc scales to sub-pc scales. This is a simulation combining the FIRE and STARFORGE frameworks within the GIZMO code. The cyan circles represent individual STARFORGE sink (star) particles, whereas the white circles represent the FIRE star (SSP) particles.
 
 {{< youtube oYnhi-a5O-c >}}
-
-## New simulation movie (TITLE TO FILL IN)
-
-Description to fill in: what the movie shows and which code the simulation used.
-
-{{< youtube rmUCKCsnPPQ >}}
-
-## Another new simulation movie (TITLE TO FILL IN)
-
-Description to fill in: what the movie shows and which code the simulation used.
-
-{{< youtube YZrkCZwzEkk >}}
 
 <!-- <iframe width="675" height="380" src="https://www.youtube.com/embed/Ph89q3FRI5o" title="Protostellar Disks" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>  -->
