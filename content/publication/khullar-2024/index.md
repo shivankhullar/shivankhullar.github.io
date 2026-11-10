@@ -35,7 +35,8 @@ publication_short: ''
 
 doi: 10.48550/arXiv.2406.18526
 
-abstract: ''
+abstract: |-
+  Stellar feedback influences the star formation rate (SFR) and the interstellar medium of galaxies in ways that are difficult to quantify numerically, because feedback is an essential ingredient of realistic simulations. To overcome this, we conduct a feedback-halting experiment starting with a Milky Way-mass galaxy in the FIRE-2 simulation framework. Terminating feedback, and comparing to a simulation in which feedback is maintained, we monitor how the runs diverge. We find that without feedback, interstellar turbulent velocities decay. There is a marked increase of dense material, while the SFR increases by over an order of magnitude. Importantly, this SFR boost is a factor of ∼15–20 larger than is accounted for by the increased free fall rate caused by higher densities. This implies that feedback moderates the star formation efficiency per free-fall time more directly than simply through the density distribution. To probe changes at the scale of giant molecular clouds (GMCs), we identify GMCs using density and virial parameter thresholds, tracking clouds as the galaxy evolves. Halting feedback stimulates rapid changes, including a proliferation of new bound clouds, a decrease of turbulent support in loosely-bound clouds, an overall increase in cloud densities, and a surge of internal star formation. Computing the cloud-integrated SFR using several theories of turbulence regulation, we show that these theories underpredict the surge in SFR by at least a factor of three. We conclude that galactic star formation is essentially feedback-regulated on scales that include GMCs, and that stellar feedback affects GMCs in multiple ways.
 
 # Summary. An optional shortened abstract.
 summary: ''
@@ -64,7 +65,10 @@ url_video: ''
 # Publication image
 # Add an image named `featured.jpg/png` to your page's folder then add a caption below.
 image:
-  caption: ''
+  caption: |-
+    **Figure 2.** Gas column density in the control (left panels) and feedback-halting simulation (right panels) after 50 Myr of divergent evolution. On the lower panel, circles display molecular clouds identified with various selection criteria. Blue, green, and black circles denote n10v2, n10v5, and n10v10 clouds (naming indicates `n_min`, `alpha_crit`). Each cloud is represented by a circle of corresponding to its effective radius.
+  # 2 = wide (up to 1200px) layout for multi-panel figures
+  placement: 2
   focal_point: ''
   preview_only: false
 
@@ -80,5 +84,3 @@ links:
 - name: ADS
   url: https://ui.adsabs.harvard.edu/abs/2024arXiv240618526K/abstract
 ---
-
-Add the **full text** or **supplementary notes** for the publication here using Markdown formatting.

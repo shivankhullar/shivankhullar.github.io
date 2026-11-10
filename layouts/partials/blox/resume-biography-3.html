@@ -215,6 +215,11 @@
     .bio3-details ul.list-disc { padding-left: .25rem; }
     .bio3-details p.course, .bio3-details ul.list-disc li { font-size: .9rem; }
     .bio3-about { padding: 0 3rem; }
+    /* Centre the whole intro vertically between the navbar and the footer (this <style> is only on the
+       homepage). The theme already stretches .page-body to fill the window; centre its content, and
+       pull the footer down from its 6rem top margin so it sits near the bottom of the window. */
+    .page-body { display: flex; flex-direction: column; justify-content: center; }
+    .page-footer footer { margin-top: 0; }
     /* Start the left column exactly at the top of the avatar, so centring is measured from there
        (the theme otherwise adds 30px of padding and a 40px margin above the avatar). */
     .bio3 #profile { padding-top: 0; padding-bottom: 0; }

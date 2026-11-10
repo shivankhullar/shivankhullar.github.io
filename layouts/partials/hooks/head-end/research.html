@@ -1,0 +1,41 @@
+{{/*
+  Research list page: the cards sit on the site background image (content/research/_index.md), where
+  the theme's grey summary/date text is unreadable. Give each card a dark frosted panel and lighter text.
+  Loaded into <head> by the theme's head-end hook.
+*/}}
+{{ if and (eq .Section "research") (eq .Kind "section") }}
+<style>
+  .page-body .group.cursor-pointer {
+    background: rgba(10, 12, 16, .62);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    border-radius: 12px; padding: .75rem .75rem 1rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .35);
+  }
+  .page-body .group.cursor-pointer p.text-sm,
+  .page-body .group.cursor-pointer .mt-3.flex { color: rgba(229, 231, 235, .92); }
+
+  /* Laptops/desktops: three cards per row (the theme's list page is fixed at two), sized so two rows
+     (six topics) plus the footer fit in the window without scrolling. Tablets keep two per row and
+     phones one, scrolling as normal. */
+  @media (min-width: 1024px) {
+    .page-body { margin-top: 1.5rem; margin-bottom: 0; }
+    .page-body article h1 { font-size: 3rem; line-height: 1.1; margin: 0; }
+    /* Grid width follows the window height so two rows always fit (cards are 16:9 images + text). */
+    .page-body .container.max-w-screen-lg {
+      max-width: min(1024px, calc(266.7vh - var(--research-k, 1200px)));
+      padding-top: 1.25rem; padding-bottom: 1rem;
+    }
+    .page-body .grid.md\:grid-cols-2 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem 1.5rem; }
+    .page-body .group.cursor-pointer { padding: .6rem .6rem .75rem; }
+    .page-body .group.cursor-pointer h2 { font-size: 1rem; margin-top: .5rem; }
+    .page-body .group.cursor-pointer p.text-sm { -webkit-line-clamp: 2; margin-top: .35rem; }
+    .page-body .group.cursor-pointer .flex-none { display: none; } /* creation date of the topic page */
+    .page-footer footer { margin-top: 0; }
+  }
+  /* Short laptop windows (e.g. 1280x800, 1366x768): cards are mostly text there, so narrowing them
+     doesn't help; show image + title only so both rows still fit. */
+  @media (min-width: 1024px) and (max-height: 760px) {
+    .page-body .group.cursor-pointer p.text-sm { display: none; }
+  }
+</style>
+{{ end }}

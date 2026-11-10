@@ -1,0 +1,88 @@
+{{ define "main" }}
+{{/*
+  Publications list, split into two numbered columns by the site owner's position in each paper's
+  `authors` list (the owner is listed as `admin`, i.e. content/authors/admin):
+    left  = first or second author
+    right = contributing author (third or later)
+  New papers sort themselves into the right column automatically. Each column is newest first.
+  Replaces the theme's generic list (_default/list.html) for this section only; entries still use
+  the theme's citation view, so buttons/links look exactly as before.
+*/}}
+
+<div class="max-w-prose mx-auto flex justify-center">
+  <article class="prose prose-slate lg:prose-xl dark:prose-invert">
+    <h1 class="lg:text-6xl">{{ .Title }}</h1>
+    {{ .Content }}
+  </article>
+</div>
+
+{{ $owner := "admin" }}
+{{ $lead := slice }}
+{{ $contrib := slice }}
+{{ range .Pages.ByDate.Reverse }}
+  {{ $pos := 0 }}
+  {{ range $i, $a := .Params.authors }}
+    {{ if and (eq $pos 0) (eq (lower $a) $owner) }}{{ $pos = add $i 1 }}{{ end }}
+  {{ end }}
+  {{ if and (ge $pos 1) (le $pos 2) }}
+    {{ $lead = $lead | append . }}
+  {{ else }}
+    {{ $contrib = $contrib | append . }}
+  {{ end }}
+{{ end }}
+
+<div class="pubs-split">
+  {{ range slice (dict "title" "First / second author" "pages" $lead) (dict "title" "Contributing author" "pages" $contrib) }}
+  {{ if .pages }}
+  <section class="pubs-col">
+    <h2 class="pubs-col-title">{{ .title }} <span class="pubs-count">({{ len .pages }})</span></h2>
+    {{ $student_led := false }}
+    <div class="pubs-list">
+      {{ range .pages }}
+        {{ range .Params.authors }}{{ if hasPrefix . "*" }}{{ $student_led = true }}{{ end }}{{ end }}
+        {{ partial "views/citation.html" (dict "item" .) }}
+      {{ end }}
+    </div>
+    {{/* An author written as '*Name' marks a student-led paper; explain the asterisk in that panel. */}}
+    {{ if $student_led }}<p class="pubs-note">* Student-led paper</p>{{ end }}
+  </section>
+  {{ end }}
+  {{ end }}
+</div>
+
+<style>
+  .pubs-split {
+    width: 100%; max-width: 84rem; margin: 3.5rem auto 0; padding: 0 1.25rem;
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem;
+    align-items: start; /* each panel is as tall as its own list */
+  }
+  @media (min-width: 1024px) {
+    .pubs-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 2.5rem; }
+  }
+  /* Frosted panels over the background image (same look as the Research cards). */
+  .pubs-col {
+    background: rgba(10, 12, 16, .62);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    border-radius: 12px; padding: 1.5rem 1.5rem 1.25rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .35);
+  }
+  @media (max-width: 640px) { .pubs-col { padding: 1.25rem 1rem 1rem; } }
+  .pubs-col-title {
+    font-size: 1.5rem; font-weight: 700; line-height: 1.3;
+    margin: 0 0 1.25rem; padding-bottom: .6rem; border-bottom: 1px solid rgba(255, 255, 255, .3);
+  }
+  .pubs-count { font-weight: 400; opacity: .7; font-size: 1.1rem; }
+
+  /* Numbered entries, one sequence across both columns: left column first, then the right column. */
+  .pubs-split { counter-reset: pub; }
+  .pubs-list { display: flex; flex-direction: column; gap: .5rem; }
+  .pubs-list .pub-list-item { counter-increment: pub; position: relative; padding-left: 2.25rem; }
+  .pubs-list .pub-list-item::before {
+    content: counter(pub) ".";
+    position: absolute; left: 0; top: 0; width: 1.6rem;
+    text-align: right; font-weight: 600; font-variant-numeric: tabular-nums;
+  }
+
+  .pubs-note { margin: 1rem 0 0; padding-top: .75rem; border-top: 1px solid rgba(255, 255, 255, .15); font-size: .85rem; opacity: .85; }
+</style>
+{{ end }}

@@ -175,6 +175,5 @@ awards:
 
 ## About Me
 
-<font color='white'> Hello! I'm a Flatiron Research Fellow (FRF) at the Center for Computational Astrophysics (CCA), Flatiron Institute. Before this, I obtained my PhD from the University of Toronto. I’m broadly interested in simulating the universe. My research focuses on the formation of stars in our Universe. My research focuses on the role of turbulence, magnetic fields and stellar feedback in the star formation process from galactic disks to protoplanetary disks. I’m interested in questions related to star formation in the nearby and early universe. 
-In my free time, I enjoy playing and watching football (soccer), watching documentaries, hiking and exploring our planet.</font>
+<font color='white'> Hello! I'm a Flatiron Research Fellow (FRF) at the Center for Computational Astrophysics (CCA), Flatiron Institute. Before this, I obtained my PhD from the University of Toronto. I’m broadly interested in simulating the universe. My research focuses on the formation of stars in different kinds of environments in our Universe -- from pristine primordial halos and dense high-redshift environments to present-day local Giant Molecular Clouds. I'm interested in understanding the role of turbulence, magnetic fields and stellar feedback in the star formation process across the various scales from galactic disks down to protoplanetary disks. In my free time, I enjoy playing and watching football (soccer), watching documentaries, hiking and exploring our planet.</font>
 

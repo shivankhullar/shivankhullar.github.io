@@ -35,7 +35,8 @@ publication_short: ''
 
 doi: 10.48550/arXiv.2610.00513
 
-abstract: ''
+abstract: |-
+  Particle splitting can increase the dynamic range in Lagrangian astrophysical simulations by several orders of magnitude. However, such methods can introduce numerical noise that may affect the rate of convergence, particularly for collapse problems where fragmentation could be artificially suppressed or enhanced. Thus it is necessary to determine how these errors propagate to key quantities of interest, and to correct or mitigate them where possible. Using GIZMO's MFM-MHD method, we perform a set of ≈220 simulations of a uniform-density turbulent gas sphere undergoing collapse, systematically varying the cloud mass and radius, feedback physics, initial resolution, the pace and cadence at which we split particles and the sink (accreting) or single-age stellar population (SSP; non-accreting) particle formation prescription. Crucially, we compare with control runs that start with uniformly-high resolution without splitting. While we find no evidence for artificial fragmentation caused by splitting particles, particle splitting runs have a smoother density field than their non-splitting counterparts. Due to this, particle splitting runs exhibit minor differences in the density and turbulence statistics. However, they form about the same total stellar mass as the control non-splitting runs, albeit with a slightly different mass spectrum. As a result, particle splitting runs have a different evolutionary history, compared to runs without particle splitting, especially when stellar feedback is present. Despite the changes seen in runs where we split particles, the numerical solution lies within the scatter inherently present in these chaotic systems, which we model by modifying the initial turbulent velocity field. Our results here argue that particle splitting generally “works” for star formation applications, despite some systematic differences in the specifics.
 
 # Summary. An optional shortened abstract.
 summary: ''
@@ -64,7 +65,10 @@ url_video: ''
 # Publication image
 # Add an image named `featured.jpg/png` to your page's folder then add a caption below.
 image:
-  caption: ''
+  caption: |-
+    **Figure 3.** Same as Figure 2 of the paper, but comparing runs with (bottom 3 rows) and without (top row) particle splitting. At early times, there are slight differences between the evolution of the cloud at different resolutions. By 1.5 *t*<sub>ff</sub>, star particles in the particle splitting runs form in roughly the same location as the natively high resolution run. However, the masses of the stars can be different (as seen in the size of the markers) and thus the feedback from the stars affects the cloud evolution differently at late times in the various runs.
+  # 2 = wide (up to 1200px) layout for multi-panel figures
+  placement: 2
   focal_point: ''
   preview_only: false
 
@@ -80,5 +84,3 @@ links:
 - name: ADS
   url: https://ui.adsabs.harvard.edu/abs/2026arXiv261000513K/abstract
 ---
-
-Add the **full text** or **supplementary notes** for the publication here using Markdown formatting.

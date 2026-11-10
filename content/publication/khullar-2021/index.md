@@ -31,7 +31,8 @@ publication_short: ''
 
 doi: 10.1093/mnras/stab1914
 
-abstract: ''
+abstract: |-
+  We conduct numerical experiments to determine the density probability distribution function (PDF) produced in supersonic, isothermal, self-gravitating turbulence of the sort that is ubiquitous in star-forming molecular clouds. Our experiments cover a wide range of turbulent Mach number and virial parameter, allowing us for the first time to determine how the PDF responds as these parameters vary, and we introduce a new diagnostic, the dimensionless star formation efficiency versus density (ε<sub>ff</sub>(*s*)) curve, which provides a sensitive diagnostic of the PDF shape and dynamics. We show that the PDF follows a universal functional form consisting of a log-normal at low density with two distinct power law tails at higher density; the first of these represents the onset of self-gravitation, and the second reflects the onset of rotational support. Once the star formation efficiency reaches a few percent, the PDF becomes statistically steady, with no evidence for secular time-evolution at star formation efficiencies from about five to 20 percent. We show that both the Mach number and the virial parameter influence the characteristic densities at which the log-normal gives way to the first power-law, and the first to the second, and we extend (for the former) and develop (for the latter) simple theoretical models for the relationship between these density thresholds and the global properties of the turbulent medium.
 
 # Summary. An optional shortened abstract.
 summary: ''
@@ -67,7 +68,10 @@ url_video: ''
 # Publication image
 # Add an image named `featured.jpg/png` to your page's folder then add a caption below.
 image:
-  caption: ''
+  caption: |-
+    **Figure 4.** *Left:* The density PDF for a snapshot from the simulation v1M5 (α<sub>vir,0</sub> = 1, ℳ ≈ 5) shown in blue, alongside our LN+2PL model fit (red). The vertical lines and corresponding shaded regions (errors in the fitted parameters) indicate the transition points from the LN part to the first PL, *s*<sub>g</sub> (purple), first PL to second PL, *s*<sub>d</sub> (green), and sink particle creation threshold density, *s*<sub>sink</sub> (black). The change in the color-bar occurs at *s* = *s*<sub>g</sub> to indicate different regions in the gas flow. *Centre:* The volume-weighted column density, ρ<sub>mw</sub>, for the same simulation snapshot. The colorbar change occurs at *s* = *s*<sub>g</sub>. *Right:* A 0.1 pc box centred around the maximum density in the simulation box (green square in the middle panel). We only show gas that is denser the second transition point, *s*<sub>d</sub>. The gas denser than *s*<sub>g</sub> consists of dense cores and filamentary-like structures, whereas gas denser than *s*<sub>d</sub> is almost always found in rotating discs.
+  # 2 = wide (up to 1200px) layout for multi-panel figures
+  placement: 2
   focal_point: ''
   preview_only: false
 
@@ -83,5 +87,3 @@ links:
 - name: ADS
   url: https://ui.adsabs.harvard.edu/abs/2021MNRAS.507.4335K/abstract
 ---
-
-Add the **full text** or **supplementary notes** for the publication here using Markdown formatting.
