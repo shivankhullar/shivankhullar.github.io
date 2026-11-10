@@ -22,10 +22,13 @@ sections:
         text: CV
         url: uploads/resume.pdf
       button2:
-        text: NASA/ADS Publication List 
+        text: SciX/ADS Publication List
         url: https://ui.adsabs.harvard.edu/search/filter_author_facet_hier_fq_author=AND&filter_author_facet_hier_fq_author=author_facet_hier%3A%221%2FKhullar%2C%20S%2FKhullar%2C%20Shivan%22&fq=%7B!type%3Daqp%20v%3D%24fq_author%7D&fq_author=(author_facet_hier%3A%221%2FKhullar%2C%20S%2FKhullar%2C%20Shivan%22)&p_=0&q=author%3A%22Khullar%2C%20Shivan%22&sort=date%20desc%2C%20bibcode%20desc
     design:
       css_class: dark
+      # Less space above/below than the page default (6rem) so the whole intro fits on a laptop screen.
+      spacing:
+        padding: ["3rem", 0, "3rem", 0]
       background:
         color: black
         image:

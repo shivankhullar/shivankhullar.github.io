@@ -18,8 +18,15 @@
 {{ $avatar_shape := site.Params.features.avatar.shape | default "circle" }}
 
 
-<div class="resume-biography px-3 flex flex-col md:flex-row justify-center gap-12">
-  <div class="flex-none m-w-[130px] mx-auto md:mx-0">
+{{/*
+  Layout (see the <style> block at the end of this file):
+    laptop/desktop (>= 1024px): left column  = profile (avatar, name, links) + interests/education
+                                right column = About Me + buttons, vertically centred between the
+                                               top of the avatar and the bottom of education
+    phones/tablets:             profile -> About Me + buttons -> interests/education
+*/}}
+<div class="resume-biography bio3 px-3">
+  <div class="bio3-profile">
 
   {{ $img := "" }}
   {{with $block.design.banner.filename}}
@@ -43,8 +50,12 @@
     {{ if $avatar }}
 
     <div class="avatar-wrapper {{ if $img }}-mt-[105px]{{else}}mt-10{{end}}">
-      {{ $avatar_image := $avatar.Fill "150x150 Center" }}
+      {{/* Shown at 150x150, but also made at 2x and 3x so it stays sharp on high-density (Retina/phone) screens. */}}
+      {{ $avatar_image := $avatar.Fill "150x150 Center q90" }}
+      {{ $avatar_2x := $avatar.Fill "300x300 Center webp q90" }}
+      {{ $avatar_3x := $avatar.Fill "450x450 Center webp q90" }}
       <img class="avatar rounded bg-white dark:bg-gray-800 p-1" src="{{ $avatar_image.RelPermalink }}" alt="{{$person_page.Title}}"
+            srcset="{{ $avatar_image.RelPermalink }} 1x, {{ $avatar_2x.RelPermalink }} 2x, {{ $avatar_3x.RelPermalink }} 3x"
             width="{{ $avatar_image.Width }}" height="{{ $avatar_image.Height }}">
       {{with $person.status.icon}}<span class="avatar-emoji">{{.|emojify}}</span>{{end}}
     </div>
@@ -101,7 +112,7 @@
   </div>
   </div>
 
-  <div class="flex-auto max-w-prose md:mt-12">
+  <div class="bio3-about">
     {{ with ($block.content.text | emojify | $page.RenderString) | default $person_page.Content }}
     <div class="pt-2 justify-content-center prose prose-slate dark:prose-invert">
       <div class="bio-text" {{ with $block.design.biography.style }}{{ (printf "style=\"%s\"" .) | safe.HTMLAttr }}{{end}}>
@@ -110,6 +121,8 @@
     </div>
     {{ end }}
 
+    {{/* Row wrapper: centers the buttons vertically (otherwise the CV button's icon shifts its baseline). */}}
+    <div class="flex flex-wrap items-center gap-2">
     {{ with $block.content.button1 }}
     <a href="{{.url}}" target="_blank" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-200 focus:text-primary-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"><svg class="w-3.5 h-3.5 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
       <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z"/>
@@ -118,30 +131,12 @@
     {{ end }}
     
     {{ with $block.content.button2 }}
-    <a href="{{.url}}" target="_blank" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-200 focus:text-primary-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"><svg class="w-3.5 h-3.5 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 0 20">
-      <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z"/>
-      <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/>
-    </svg> {{.text}}</a>
+    <a href="{{.url}}" target="_blank" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-200 focus:text-primary-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700">{{.text}}</a>
     {{ end }}
-
-
-
-
-
-  <div class="grid grid-cols-2 gap-4 justify-between mt-6 dark:text-white-300">
-
-    {{ with $person.interests }}
-    <div class="">
-      <div class="section-subheading mb-3">{{ i18n "interests" | markdownify }}</div>
-      <ul class="list-disc list-inside space-y-1 pl-5">
-        {{ range . }}
-        <li>
-          {{ . | markdownify | emojify }}
-        </li>
-        {{ end }}
-      </ul>
     </div>
-    {{ end }}
+  </div>
+
+  <div class="bio3-details dark:text-white-300">
 
     {{ with $person.education }}
     <div class="">
@@ -160,7 +155,70 @@
     </div>
     {{ end }}
 
+    {{ with $person.interests }}
+    <div class="">
+      <div class="section-subheading mb-3">{{ i18n "interests" | markdownify }}</div>
+      <ul class="list-disc list-inside space-y-1 pl-5">
+        {{ range . }}
+        <li>
+          {{ . | markdownify | emojify }}
+        </li>
+        {{ end }}
+      </ul>
+    </div>
+    {{ end }}
+
   </div>
 
 </div>
-</div>
+
+<style>
+  .bio3 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "profile" "about" "details";
+    row-gap: 2.5rem;
+    justify-content: center;
+  }
+  .bio3-profile { grid-area: profile; }
+  .bio3-about   { grid-area: about; max-width: 65ch; justify-self: center; }
+  .bio3-details {
+    grid-area: details;
+    display: grid;
+    /* Education (first, may wrap) | Interests (second, keeps its natural width). */
+    grid-template-columns: minmax(0, 1fr) max-content;
+    gap: 1.5rem 2.5rem;
+  }
+  /* The bio's "About Me" heading would otherwise add a top margin and push the block off-centre. */
+  .bio3-about .bio-text > :first-child { margin-top: 0; }
+  .bio3-about .prose { padding-top: 0; }
+
+  @media (min-width: 1024px) {
+    /* Two equal halves, matching the background: left = simulation, right = JWST image. */
+    .bio3 {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas: "profile about" "details about";
+      column-gap: 0;
+      row-gap: 2rem;
+      justify-content: stretch;
+    }
+    .bio3-profile { justify-self: center; width: 100%; max-width: 40rem; padding: 0 2rem; }
+    /* Interests + Education use the full left half so the degrees fit on one line. */
+    /* Shrink to fit the content and centre it in the left half, under the profile. Education may
+       shrink (and wrap) only when the half is too narrow for it. */
+    .bio3-details {
+      justify-self: center; width: fit-content; max-width: 100%; padding: 0 1rem; column-gap: 1.5rem;
+      grid-template-columns: minmax(0, max-content) max-content;
+    }
+    .bio3-details li svg { margin-inline-end: 0; }
+    .bio3-details li.flex { gap: .5rem; }
+    .bio3-details ul.list-disc { padding-left: .25rem; }
+    .bio3-details p.course, .bio3-details ul.list-disc li { font-size: .9rem; }
+    .bio3-about { padding: 0 3rem; }
+    /* Start the left column exactly at the top of the avatar, so centring is measured from there
+       (the theme otherwise adds 30px of padding and a 40px margin above the avatar). */
+    .bio3 #profile { padding-top: 0; padding-bottom: 0; }
+    .bio3 .avatar-wrapper { margin-top: 0; }
+    .bio3-about { align-self: center; justify-self: center; }
+  }
+</style>

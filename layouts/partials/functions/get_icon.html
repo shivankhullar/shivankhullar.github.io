@@ -1,0 +1,46 @@
+{{/* Return the requested SVG icon */}}
+{{/* Search for the icon in the Hugo Blox Builder icon library, falling back to user's icon library */}}
+
+{{/*
+  Local copy of the theme's partial (blox-tailwind) with one fix: the SVG viewBox now uses each
+  icon's own width/height from the icon data (Iconify format), falling back to the pack's
+  width/height. The theme used the pack height for both dimensions, so narrower icons such as
+  academicons/google-scholar (384 wide in a 512-high pack) were drawn in a square with blank
+  space on their right, making icon rows look unevenly spaced.
+*/}}
+
+{{ $dirFile := path.Split .name }}
+{{ $pack := .pack | default (strings.Replace $dirFile.Dir "/" "") | default "hero" }}
+{{ $name := $dirFile.File }}
+
+{{- $icon_pack := index site.Data.icons $pack -}}
+{{- $icon := index (index $icon_pack "icons") $name -}}
+
+{{ if $icon }}
+  {{ if in (slice "hb" "brands") $pack }}
+    {{/* Pass */}}
+  {{ else }}
+    {{ $icon_body := index $icon "body" }}
+    {{ $pack_height := index $icon_pack "height" }}
+    {{ $icon_height := index $icon "height" | default $pack_height }}
+    {{ $icon_width := index $icon "width" | default (index $icon_pack "width") | default $pack_height }}
+    {{ $icon = printf `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %s %s">%s</svg>` (cast.ToString $icon_width) (cast.ToString $icon_height) $icon_body }}
+  {{ end }}
+{{ else }}
+  {{ with index (index site.Data.icons.hb "icons") $name -}}
+    {{ $icon = . }}
+  {{ else }}
+    {{ with resources.GetMatch (path.Join "media" "icons" $pack (printf "%s.svg" $name)) }}
+      {{ $icon = .Content }}
+    {{else}}
+      {{ warnf "The icon `%s.svg` was not found in your `assets/media/icons/%s/` folder" $name $pack }}
+      {{ $icon = index (index site.Data.icons.brands "icons") "hugo" }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if .attributes }}
+  {{ $icon = replaceRE "<svg" (printf "<svg %s" .attributes) $icon }}
+{{ end }}
+
+{{- return ($icon | safeHTML) -}}

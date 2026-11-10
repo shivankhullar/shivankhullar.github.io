@@ -33,8 +33,8 @@ profiles:
   - icon: at-symbol
     url: 'mailto:skhullar@flatironinstitute.org'
     label: E-mail Me
-  - icon: brands/x
-    url: https://x.com/KhullarShivan
+  #- icon: brands/x
+  #  url: https://x.com/KhullarShivan
   #- icon: brands/instagram
   #  url: https://www.instagram.com/
   - icon: brands/github
@@ -47,7 +47,7 @@ profiles:
     url: https://orcid.org/0000-0003-1053-1262
 
 interests:
-  - Star formation
+  - "Star formation & the ISM"
   - Numerical methods
   - Turbulence
   - Magnetohydrodynamics

@@ -24,6 +24,9 @@ main:
   - name: Movies
     url: movies/
     weight: 30
+  - name: Photography
+    url: photography/
+    weight: 35
   - name: Resources
     url: useful_resources/
     weight: 40

@@ -1,0 +1,22 @@
+{{/*
+  Publication styling, loaded into <head> by the theme's head-end hook.
+  - Publications list page: number the entries (1 = newest, top of the list).
+  - Individual paper pages: bold the site owner's name in the author line. The theme only shows an
+    avatar next to authors that have a profile (content/authors/admin), so the name next to an
+    avatar is the owner's. (On the list page, `highlight_name: true` in that profile already bolds it.)
+*/}}
+{{ if eq .Section "publication" }}
+<style>
+  {{- if eq .Kind "section" }}
+  .page-body { counter-reset: pub; }
+  .page-body .pub-list-item.view-citation { counter-increment: pub; position: relative; padding-left: 2.5rem; }
+  .page-body .pub-list-item.view-citation::before {
+    content: counter(pub) ".";
+    position: absolute; left: 0; top: 0; width: 1.75rem;
+    text-align: right; font-weight: 600; font-variant-numeric: tabular-nums;
+  }
+  {{- else if eq .Kind "page" }}
+  .page-body .group > img.rounded-full + div { font-weight: 700; }
+  {{- end }}
+</style>
+{{ end }}

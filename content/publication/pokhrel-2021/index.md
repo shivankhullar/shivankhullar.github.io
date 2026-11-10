@@ -11,7 +11,7 @@ authors:
 - Mark R. Krumholz
 - Christoph Federrath
 - Mark Heyer
-- Shivan Khullar
+- admin
 - S. Thomas Megeath
 - Philip C. Myers
 - Stella S.~R. Offner

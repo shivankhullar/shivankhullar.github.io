@@ -6,7 +6,7 @@ title: The density structure of supersonic self-gravitating turbulence
 # If you created a profile for a user (e.g. the default `admin` user at `content/authors/admin/`), 
 # write the username (folder name) here, and it will be replaced with their full name and linked to their profile.
 authors:
-- Shivan Khullar
+- admin
 - Christoph Federrath
 - Mark R. Krumholz
 - Christopher D. Matzner

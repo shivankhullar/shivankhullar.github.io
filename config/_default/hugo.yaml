@@ -25,7 +25,8 @@ build:
   writeStats: true
 enableGitInfo: false
 summaryLength: 30
-paginate: 10
+# `paginate: 10` was removed: Hugo 0.128+ rejects that key, and 10 items per
+# page is already the default in every Hugo version.
 enableEmoji: true
 enableRobotsTXT: true
 footnotereturnlinkcontents: <sup>^</sup>

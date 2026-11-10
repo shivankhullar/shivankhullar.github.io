@@ -7,7 +7,7 @@ title: 'FORGE’d in Fragments: Pop III star formation in a Milky Way-like proge
 # write the username (folder name) here, and it will be replaced with their full name and linked to their profile.
 authors:
 - Vasilii Pustovoit
-- Shivan Khullar
+- admin
 - Norman Murray
 - Yasmine J. Meziani
 - Claude-André Faucher-Giguère
@@ -19,8 +19,8 @@ authors:
 # A YAML list of notes for each author in the above `authors` list
 author_notes: []
 
-# Submission month is not listed in the CV; update once the arXiv/journal date is known.
-date: '2026-01-01'
+# arXiv submission date
+date: '2026-11-05'
 
 # Date to publish webpage (NOT necessarily Bibtex publication's date).
 publishDate: '2026-11-10T05:45:36.009031Z'
@@ -35,14 +35,15 @@ publication_types:
 publication: 'Submitted to *ApJ*'
 publication_short: ''
 
-doi: ''
+doi: 10.48550/arXiv.2611.08603
 
 abstract: ''
 
 # Summary. An optional shortened abstract.
 summary: ''
 
-tags: []
+tags:
+- Astrophysics - Astrophysics of Galaxies
 
 # Display this page in a list of Featured pages?
 featured: false
@@ -75,12 +76,11 @@ image:
 #   E.g. `projects: ['internal-project']` links to `content/project/internal-project/index.md`.
 #   Otherwise, set `projects: []`.
 projects: []
-# Add arXiv/ADS links once available, e.g.:
-# links:
-# - name: arXiv
-#   url: https://arxiv.org/abs/XXXX.XXXXX
-# - name: ADS
-#   url: https://ui.adsabs.harvard.edu/abs/...
+links:
+- name: arXiv
+  url: https://arxiv.org/abs/2611.08603
+- name: ADS
+  url: https://ui.adsabs.harvard.edu/abs/2026arXiv261108603P/abstract
 ---
 
 Add the **full text** or **supplementary notes** for the publication here using Markdown formatting.

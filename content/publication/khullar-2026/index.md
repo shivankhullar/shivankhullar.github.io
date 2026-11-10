@@ -6,7 +6,7 @@ title: 'Star Formation Mitosis: The Effects of Particle Splitting on the Star Fo
 # If you created a profile for a user (e.g. the default `admin` user at `content/authors/admin/`),
 # write the username (folder name) here, and it will be replaced with their full name and linked to their profile.
 authors:
-- Shivan Khullar
+- admin
 - Michael Y. Grudić
 - Christopher D. Matzner
 - Philip F. Hopkins
@@ -17,8 +17,8 @@ authors:
 # A YAML list of notes for each author in the above `authors` list
 author_notes: []
 
-# Submission month is not listed in the CV; update once the arXiv/journal date is known.
-date: '2026-01-01'
+# arXiv submission date
+date: '2026-09-30'
 
 # Date to publish webpage (NOT necessarily Bibtex publication's date).
 publishDate: '2026-11-10T05:45:36.009031Z'
@@ -33,14 +33,15 @@ publication_types:
 publication: 'Submitted to *OJAp*'
 publication_short: ''
 
-doi: ''
+doi: 10.48550/arXiv.2610.00513
 
 abstract: ''
 
 # Summary. An optional shortened abstract.
 summary: ''
 
-tags: []
+tags:
+- Astrophysics - Astrophysics of Galaxies
 
 # Display this page in a list of Featured pages?
 featured: false
@@ -73,12 +74,11 @@ image:
 #   E.g. `projects: ['internal-project']` links to `content/project/internal-project/index.md`.
 #   Otherwise, set `projects: []`.
 projects: []
-# Add arXiv/ADS links once available, e.g.:
-# links:
-# - name: arXiv
-#   url: https://arxiv.org/abs/XXXX.XXXXX
-# - name: ADS
-#   url: https://ui.adsabs.harvard.edu/abs/...
+links:
+- name: arXiv
+  url: https://arxiv.org/abs/2610.00513
+- name: ADS
+  url: https://ui.adsabs.harvard.edu/abs/2026arXiv261000513K/abstract
 ---
 
 Add the **full text** or **supplementary notes** for the publication here using Markdown formatting.
