@@ -1,29 +1,38 @@
 {{- define "main" -}}
 {{/*
-  Photography gallery.
+  Photography gallery, with two views the visitor can switch between:
+    - Grid:   justified rows (every photo in a row has the same height, nothing is
+              cropped), read left to right in the order below;
+    - Scroll: one row of large photos, scrolled left/right (arrows, keys, wheel, swipe).
+  Clicking a photo in either view opens it full screen. The chosen view is remembered.
 
-  Every JPG/PNG/WebP/TIFF in content/photography/ is shown, sorted by filename
-  (prefix files with 01-, 02-, ... to control the order). Files starting with
-  "featured" are skipped.
+  Captions come from `resources:` in content/photography/_index.md: one entry per
+  photo, with `title` (where) and `params.taken` (month and year). With `shuffle: true`
+  there, the photos appear in a new random order on every visit; otherwise in the order
+  of that list (photos not listed are added at the end, by filename).
 
-  Visitors never download the originals: `_build.publishResources: false` in
-  content/photography/_index.md stops them being published, and this template
-  publishes two compressed WebP copies of each photo instead — a grid thumbnail
-  and a large version for the full-screen viewer. Re-encoding also drops EXIF
-  metadata (camera settings, GPS) from what is published.
-
-  Captions are optional: add a `resources:` entry with a `title:` per file in
-  the front matter of _index.md.
+  Visitors never download the files in content/photography/
+  (`_build.publishResources: false`); this template publishes WebP copies instead,
+  at three sizes (800, 1600 and up to 3200 px), and the browser picks the smallest
+  one that is sharp on the visitor's screen. Re-encoding also drops all metadata.
 */}}
 {{- $exts := slice "jpg" "jpeg" "png" "webp" "tif" "tiff" -}}
 {{- $photos := slice -}}
-{{- range .Resources.ByType "image" -}}
+{{- $seen := slice -}}
+{{- range .Params.resources -}}
+  {{- with $.Resources.GetMatch .src -}}
+    {{- if not (in $seen .Name) -}}
+      {{- $photos = $photos | append . -}}
+      {{- $seen = $seen | append .Name -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- range sort (.Resources.ByType "image") "Name" -}}
   {{- $ext := lower (strings.TrimPrefix "." (path.Ext .Name)) -}}
-  {{- if and (in $exts $ext) (not (hasPrefix (lower (path.Base .Name)) "featured")) -}}
+  {{- if and (in $exts $ext) (not (in $seen .Name)) (not (hasPrefix (lower (path.Base .Name)) "featured")) -}}
     {{- $photos = $photos | append . -}}
   {{- end -}}
 {{- end -}}
-{{- $photos = sort $photos "Name" -}}
 
 <div class="pg-page mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
   <header class="pg-header">
@@ -31,26 +40,69 @@
     {{ with .Content }}
       <div class="pg-intro prose prose-slate dark:prose-invert lg:prose-lg mx-auto">{{ . }}</div>
     {{ end }}
+    {{ if $photos }}
+    <div class="pg-toolbar" role="group" aria-label="Gallery layout">
+      <button type="button" class="pg-view-btn" data-pg-view="grid" aria-pressed="true">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="7" height="9" rx="1.5"/><rect x="11" y="2" width="7" height="5" rx="1.5"/><rect x="2" y="13" width="7" height="5" rx="1.5"/><rect x="11" y="9" width="7" height="9" rx="1.5"/></svg>
+        Grid
+      </button>
+      <button type="button" class="pg-view-btn" data-pg-view="strip" aria-pressed="false">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="4" width="10" height="12" rx="1.5"/><rect x="0" y="6" width="3" height="8" rx="1"/><rect x="17" y="6" width="3" height="8" rx="1"/></svg>
+        Scroll
+      </button>
+    </div>
+    {{ end }}
   </header>
 
   {{ if $photos }}
-  <div class="pg-gallery" data-pg-gallery>
-    {{- range $i, $photo := $photos -}}
-      {{- $img := $photo.Filter images.AutoOrient -}}
-      {{- $thumb := $img.Fit "900x900 webp q80" -}}
-      {{- $large := $img.Fit "2400x2400 webp q85" -}}
-      {{- $caption := "" -}}
-      {{- if ne $photo.Title $photo.Name }}{{ $caption = $photo.Title }}{{ end -}}
-      <figure class="pg-item">
-        <a class="pg-link" href="{{ $large.RelPermalink }}" data-pg-index="{{ $i }}" data-pg-caption="{{ $caption }}"
-           aria-label="{{ with $caption }}{{ . }}: {{ end }}view full size">
-          <img src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}"
-               alt="{{ $caption | default "Photograph" }}" loading="{{ if lt $i 6 }}eager{{ else }}lazy{{ end }}" decoding="async">
-          {{ with $caption }}<figcaption class="pg-hover-caption">{{ . }}</figcaption>{{ end }}
-        </a>
-      </figure>
-    {{- end -}}
+  <div class="pg-wrap" data-pg-wrap>
+    <div class="pg-gallery is-grid" data-pg-gallery tabindex="-1"{{ if .Params.shuffle }} data-pg-shuffle{{ end }}>
+      {{- range $i, $photo := $photos -}}
+        {{- $img := $photo.Filter images.AutoOrient -}}
+        {{- $s := $img.Fit "800x800 webp q78" -}}
+        {{- $m := $img.Fit "1600x1600 webp q80" -}}
+        {{- $l := $img.Fit "3200x3200 webp q85" -}}
+        {{- $place := "" -}}
+        {{- if ne $photo.Title $photo.Name }}{{ $place = $photo.Title }}{{ end -}}
+        {{- $taken := $photo.Params.taken | default "" -}}
+        {{- $caption := delimit (slice $place $taken | complement (slice "")) " · " -}}
+        {{- $ratio := div (float $s.Width) $s.Height -}}
+        <figure class="pg-item" style="--ar: {{ $ratio }}">
+          <a class="pg-link" href="{{ $l.RelPermalink }}" data-pg-index="{{ $i }}" data-pg-caption="{{ $caption }}"
+             aria-label="{{ with $caption }}{{ . }}: {{ end }}view full screen">
+            <img src="{{ $s.RelPermalink }}"
+                 srcset="{{ $s.RelPermalink }} {{ $s.Width }}w, {{ $m.RelPermalink }} {{ $m.Width }}w, {{ $l.RelPermalink }} {{ $l.Width }}w"
+                 sizes="{{ printf "(max-width: 640px) min(100vw, %.0fpx), %.0fpx" (mul 220 $ratio 1.3) (mul 250 $ratio 1.4) }}"
+                 data-sizes-grid="{{ printf "(max-width: 640px) min(100vw, %.0fpx), %.0fpx" (mul 220 $ratio 1.3) (mul 250 $ratio 1.4) }}"
+                 data-sizes-strip="{{ printf "min(calc(min(100vh - 190px, 900px) * %.3f), 78vw)" $ratio }}"
+                 width="{{ $s.Width }}" height="{{ $s.Height }}"
+                 alt="{{ with $place }}Photograph: {{ . }}{{ else }}Photograph{{ end }}"
+                 loading="{{ if and (lt $i 6) (not $.Params.shuffle) }}eager{{ else }}lazy{{ end }}" decoding="async">
+          </a>
+          {{ if $caption }}
+          <figcaption class="pg-caption">
+            {{- with $place }}<span class="pg-place">{{ . }}</span>{{ end -}}
+            {{- with $taken }}<span class="pg-date">{{ . }}</span>{{ end -}}
+          </figcaption>
+          {{ end }}
+        </figure>
+      {{- end -}}
+    </div>
+    {{ if .Params.shuffle -}}
+    <script>
+      /* Random order on every visit (Fisher-Yates), done right away, before any photo loads. */
+      (function () {
+        var g = document.querySelector('[data-pg-gallery]'), it = Array.prototype.slice.call(g.children);
+        for (var i = it.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = it[i]; it[i] = it[j]; it[j] = t; }
+        it.forEach(function (el, k) { g.appendChild(el); if (k < 6) el.querySelector('img').loading = 'eager'; });
+      })();
+    </script>
+    {{- end }}
+    <button type="button" class="pg-btn pg-strip-prev" data-pg-strip-prev aria-label="Scroll left">&#8249;</button>
+    <button type="button" class="pg-btn pg-strip-next" data-pg-strip-next aria-label="Scroll right">&#8250;</button>
+    <div class="pg-strip-counter" data-pg-strip-counter aria-hidden="true"></div>
   </div>
+  <p class="pg-rights">All photographs © {{ now.Year }} Shivan Khullar. All rights reserved; please ask before reusing them.</p>
   {{ else }}
   <p class="pg-empty">Photos coming soon.</p>
   {{ end }}
@@ -68,64 +120,223 @@
 </div>
 
 <style>
-  .pg-header { text-align: center; margin-bottom: 2.5rem; }
+  .pg-header { text-align: center; margin-bottom: 2rem; }
   .pg-header h1 { font-size: clamp(2.25rem, 5vw, 3.75rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
   .pg-intro { text-align: center; }
   .pg-empty { text-align: center; opacity: .7; }
 
-  /* Masonry grid: photos keep their own aspect ratio, nothing is cropped. */
-  .pg-gallery { columns: 3 300px; column-gap: 14px; }
-  .pg-gallery .pg-item { break-inside: avoid; margin: 0 0 14px; }
-  .pg-gallery .pg-link { position: relative; display: block; overflow: hidden; border-radius: 10px; background: rgba(255,255,255,.04); }
-  .pg-gallery img { display: block; width: 100%; height: auto; margin: 0; transition: transform .5s cubic-bezier(.2,.7,.2,1), filter .5s; }
-  .pg-hover-caption {
-    position: absolute; inset: auto 0 0 0; padding: 2.5rem 1rem .85rem;
-    font-size: .9rem; color: #fff; text-align: left;
-    background: linear-gradient(to top, rgba(0,0,0,.75), transparent);
-    opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s;
-  }
-  @media (hover: hover) {
-    .pg-gallery .pg-link:hover img { transform: scale(1.03); filter: brightness(1.06); }
-    .pg-gallery .pg-link:hover .pg-hover-caption { opacity: 1; transform: none; }
-  }
-  .pg-gallery .pg-link:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  /* Grid / Scroll switch */
+  .pg-toolbar { display: inline-flex; gap: 2px; margin-top: 1.5rem; padding: 3px; border-radius: 999px;
+    background: rgba(127,127,127,.14); border: 1px solid rgba(127,127,127,.25); }
+  .pg-view-btn { display: inline-flex; align-items: center; gap: .45rem; padding: .4rem 1rem; border-radius: 999px;
+    font-size: .9rem; font-weight: 600; color: inherit; opacity: .7; background: transparent; border: 0; cursor: pointer;
+    transition: background .2s, opacity .2s; }
+  .pg-view-btn svg { width: 16px; height: 16px; fill: currentColor; }
+  .pg-view-btn:hover { opacity: 1; }
+  .pg-view-btn[aria-pressed="true"] { opacity: 1; background: rgba(127,127,127,.28); }
+  .pg-view-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 
-  /* Full-screen viewer */
+  .pg-page, .pg-wrap { min-width: 0; width: 100%; }
+  .pg-wrap { position: relative; scroll-margin-top: 84px; }
+  .pg-item { margin: 0; }
+  .pg-link { position: relative; display: block; overflow: hidden; border-radius: 10px; background: rgba(127,127,127,.08); }
+  .pg-link img { display: block; width: 100%; height: auto; margin: 0; transition: transform .5s cubic-bezier(.2,.7,.2,1), filter .5s; }
+  .pg-link:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+  .pg-caption { font-size: .85rem; line-height: 1.4; }
+  .pg-place { font-weight: 600; }
+  .pg-date { opacity: .7; }
+  .pg-place + .pg-date::before { content: " · "; }
+
+  /* --- Grid view: justified rows ---
+     Each photo's flex-basis and flex-grow are proportional to its aspect ratio (--ar), so the
+     photos in a row stretch by the same factor and end up the same height (~250-350px), in order.
+     The invisible ::after item soaks up the space at the end of the last row. */
+  .pg-gallery.is-grid { display: flex; flex-wrap: wrap; gap: 12px; --row-h: 250px; }
+  .is-grid .pg-item { flex: var(--ar) 1 calc(var(--ar) * var(--row-h)); position: relative; min-width: 0; }
+  .pg-gallery.is-grid::after { content: ""; flex: 1000 1 0; }
+  .is-grid .pg-caption { padding: .4rem .15rem 0; }
+  @media (hover: hover) {
+    /* With a mouse, the caption fades in over the bottom of the photo. */
+    .is-grid .pg-caption { position: absolute; inset: auto 0 0 0; padding: 2.75rem .9rem .75rem; color: #fff;
+      border-radius: 0 0 10px 10px; background: linear-gradient(to top, rgba(0,0,0,.78), transparent);
+      opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s; pointer-events: none; }
+    .is-grid .pg-item:hover .pg-caption, .is-grid .pg-item:focus-within .pg-caption { opacity: 1; transform: none; }
+    .is-grid .pg-item:hover img { transform: scale(1.03); filter: brightness(1.06); }
+  }
+
+  /* --- Scroll view: one row, scrolled sideways --- */
+  .pg-gallery.is-strip { display: flex; align-items: center; gap: 18px; overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity; scroll-padding-inline: 8px; padding: 4px 8px 14px; outline: none;
+    scrollbar-width: thin; scrollbar-color: rgba(127,127,127,.5) transparent; }
+  .is-strip .pg-item { flex: none; scroll-snap-align: center; }
+  /* Photo height: the window height minus the navigation bar, caption and counter, so the
+     whole row fits on screen once scrolled to (the view switch scrolls it into place). */
+  .pg-wrap { --strip-h: clamp(260px, calc(100vh - 190px), 900px); }
+  /* ...but never wider than 78% of the window, so blurred neighbours always show either side. */
+  .is-strip .pg-link img { height: min(var(--strip-h), calc(78vw / var(--ar))); width: auto; max-width: none; }
+  /* The row spans the full window width rather than the page column. */
+  /* (100vw includes the vertical scrollbar on Windows/Linux; --pg-sbw, set by the script, removes it.) */
+  .pg-wrap.is-strip-mode { --pg-vw: calc(100vw - var(--pg-sbw, 0px)); width: var(--pg-vw); margin-left: calc(50% - var(--pg-vw) / 2); }
+  .pg-wrap.is-strip-mode .pg-strip-counter { padding: 0 1rem; }
+  /* The caption never widens the photo's column: it is clipped to one line instead. */
+  .is-strip .pg-caption { width: 0; min-width: 100%; padding-top: .6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* Focus on the photo in the middle: the ones either side are blurred and dimmed. */
+  .is-strip .pg-item { transition: filter .45s ease, opacity .45s ease; }
+  .is-strip .pg-item:not(.is-current) { filter: blur(5px) brightness(.45) saturate(.8); opacity: .85; }
+  .is-strip .pg-item:not(.is-current) .pg-caption { visibility: hidden; }
+  .is-strip .pg-item.is-current:hover img { filter: brightness(1.06); }
+  .pg-wrap:not(.is-strip-mode) .pg-strip-prev, .pg-wrap:not(.is-strip-mode) .pg-strip-next,
+  .pg-wrap:not(.is-strip-mode) .pg-strip-counter { display: none; }
+  .pg-strip-counter { text-align: center; font-size: .85rem; opacity: .65; margin-top: .2rem; }
+  .pg-strip-prev, .pg-strip-next { top: calc(var(--strip-h) / 2 + 4px); transform: translateY(-50%);
+    background: rgba(0,0,0,.45); backdrop-filter: blur(4px); }
+  .pg-strip-prev { left: 14px; }
+  .pg-strip-next { right: 14px; }
+  .pg-strip-prev:disabled, .pg-strip-next:disabled { opacity: 0; pointer-events: none; }
+  @media (max-width: 640px) {
+    .pg-wrap { --strip-h: min(62vh, 560px); }
+    .is-strip .pg-link img { height: min(var(--strip-h), calc(86vw / var(--ar))); }
+    .pg-strip-prev, .pg-strip-next { display: none !important; } /* swipe instead */
+    .pg-gallery.is-grid { gap: 8px; --row-h: 220px; }
+  }
+
+  .pg-rights { text-align: center; font-size: .8rem; opacity: .6; margin-top: 2rem; }
+
+  /* --- Full-screen viewer --- */
   .pg-lightbox { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center;
-    background: rgba(5,6,8,.94); backdrop-filter: blur(6px); }
+    background: rgba(5,6,8,.95); backdrop-filter: blur(6px); }
   .pg-lightbox[hidden] { display: none; }
-  .pg-stage { margin: 0; max-width: min(92vw, 2400px); text-align: center; }
-  .pg-stage img { max-width: 100%; max-height: 84vh; width: auto; height: auto; margin: 0 auto; border-radius: 4px;
+  .pg-stage { margin: 0; max-width: 94vw; text-align: center; }
+  .pg-stage img { max-width: 100%; max-height: 86vh; width: auto; height: auto; margin: 0 auto; border-radius: 4px;
     box-shadow: 0 20px 60px rgba(0,0,0,.6); transition: opacity .25s; }
   .pg-stage img.pg-loading { opacity: .25; }
   .pg-stage figcaption { color: #e5e7eb; font-size: .95rem; margin-top: .85rem; min-height: 1.2em; }
-  .pg-btn { position: absolute; color: #fff; background: rgba(255,255,255,.08); border: 0; border-radius: 999px;
+  .pg-btn { position: absolute; z-index: 2; color: #fff; background: rgba(255,255,255,.08); border: 0; border-radius: 999px;
     width: 46px; height: 46px; font-size: 30px; line-height: 1; cursor: pointer; display: grid; place-items: center;
-    transition: background .2s; }
-  .pg-btn:hover, .pg-btn:focus-visible { background: rgba(255,255,255,.2); outline: none; }
+    transition: background .2s, opacity .2s; }
+  .pg-btn:hover, .pg-btn:focus-visible { background: rgba(255,255,255,.22); outline: none; }
   .pg-close { top: 16px; right: 16px; }
   .pg-prev { left: 16px; top: 50%; transform: translateY(-50%); }
   .pg-next { right: 16px; top: 50%; transform: translateY(-50%); }
   .pg-counter { position: absolute; top: 26px; left: 50%; transform: translateX(-50%); color: #9ca3af; font-size: .85rem; }
   @media (max-width: 640px) {
-    .pg-gallery { column-gap: 10px; }
-    .pg-gallery .pg-item { margin-bottom: 10px; }
     .pg-prev, .pg-next { top: auto; bottom: 18px; transform: none; }
     .pg-prev { left: calc(50% - 58px); }
     .pg-next { right: calc(50% - 58px); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .pg-gallery img, .pg-hover-caption, .pg-stage img { transition: none; }
+    .pg-link img, .pg-caption, .pg-stage img, .is-strip .pg-item { transition: none; }
   }
 </style>
 
 <script>
 (function () {
   var gallery = document.querySelector('[data-pg-gallery]');
+  var wrap = document.querySelector('[data-pg-wrap]');
   var box = document.querySelector('[data-pg-lightbox]');
   if (!gallery || !box) return;
 
+  var items = Array.prototype.slice.call(gallery.querySelectorAll('.pg-item'));
   var links = Array.prototype.slice.call(gallery.querySelectorAll('[data-pg-index]'));
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Grid / Scroll switch ---------- */
+  var viewBtns = Array.prototype.slice.call(document.querySelectorAll('[data-pg-view]'));
+  var prevBtn = wrap.querySelector('[data-pg-strip-prev]');
+  var nextBtn = wrap.querySelector('[data-pg-strip-next]');
+  var stripCounter = wrap.querySelector('[data-pg-strip-counter]');
+  var view = 'grid';
+
+  function setView(v, remember) {
+    var anchor = currentIndex(); // keep roughly the same photo in view across the switch
+    view = v === 'strip' ? 'strip' : 'grid';
+    gallery.classList.toggle('is-grid', view === 'grid');
+    gallery.classList.toggle('is-strip', view === 'strip');
+    wrap.classList.toggle('is-strip-mode', view === 'strip');
+    viewBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.pgView === view)); });
+    // Tell the browser how wide each photo is drawn now, so it picks the right file size.
+    gallery.querySelectorAll('img').forEach(function (img) {
+      img.sizes = view === 'strip' ? img.dataset.sizesStrip : img.dataset.sizesGrid;
+    });
+    if (remember) { try { localStorage.setItem('pg-view', view); } catch (e) {} }
+    padStrip();
+    if (view === 'strip') {
+      scrollToItem(anchor, false);
+      updateStrip();
+    }
+  }
+  function currentIndex() {
+    if (!gallery.classList.contains('is-strip')) return 0;
+    var mid = gallery.scrollLeft + gallery.clientWidth / 2, best = 0, bestD = Infinity;
+    items.forEach(function (it, i) {
+      var d = Math.abs(it.offsetLeft + it.offsetWidth / 2 - mid);
+      if (d < bestD) { bestD = d; best = i; }
+    });
+    return best;
+  }
+  function scrollToItem(i, smooth) {
+    i = Math.max(0, Math.min(items.length - 1, i));
+    var it = items[i];
+    gallery.scrollTo({ left: it.offsetLeft - (gallery.clientWidth - it.offsetWidth) / 2,
+                       behavior: smooth && !reduceMotion ? 'smooth' : 'auto' });
+  }
+  var ticking = false;
+  // Space at both ends of the row, so the first and last photos can also sit in the middle.
+  function padStrip() {
+    var ends = view === 'strip' && items.length;
+    gallery.style.paddingLeft = ends ? Math.max(8, (gallery.clientWidth - items[0].offsetWidth) / 2) + 'px' : '';
+    gallery.style.paddingRight = ends ? Math.max(8, (gallery.clientWidth - items[items.length - 1].offsetWidth) / 2) + 'px' : '';
+  }
+  var shown = -1;
+  function updateStrip() {
+    if (view !== 'strip') return;
+    var cur = currentIndex();
+    if (cur !== shown) {
+      if (items[shown]) items[shown].classList.remove('is-current');
+      items[cur].classList.add('is-current');
+      shown = cur;
+    }
+    var max = gallery.scrollWidth - gallery.clientWidth;
+    prevBtn.disabled = gallery.scrollLeft <= 2;
+    nextBtn.disabled = gallery.scrollLeft >= max - 2;
+    stripCounter.textContent = (cur + 1) + ' / ' + items.length;
+  }
+  gallery.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; updateStrip(); }); }
+  }, { passive: true });
+  function scrollbarWidth() {
+    document.documentElement.style.setProperty('--pg-sbw', (window.innerWidth - document.documentElement.clientWidth) + 'px');
+  }
+  scrollbarWidth();
+  window.addEventListener('resize', function () { scrollbarWidth(); padStrip(); updateStrip(); });
+  // Photos load lazily, so their widths can change after the row is laid out.
+  gallery.addEventListener('load', function () { if (view === 'strip') { padStrip(); updateStrip(); } }, true);
+  prevBtn.addEventListener('click', function () { scrollToItem(currentIndex() - 1, true); });
+  nextBtn.addEventListener('click', function () { scrollToItem(currentIndex() + 1, true); });
+  viewBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      setView(b.dataset.pgView, true);
+      // Bring the whole row on screen (it is sized to fit the window below the menu bar).
+      if (view === 'strip' && wrap.getBoundingClientRect().top > 100) {
+        wrap.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+    });
+  });
+
+  // A mouse wheel scrolls the row sideways; at either end the page scrolls as usual.
+  gallery.addEventListener('wheel', function (e) {
+    if (view !== 'strip' || e.ctrlKey || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;
+    var max = gallery.scrollWidth - gallery.clientWidth;
+    if ((e.deltaY < 0 && gallery.scrollLeft <= 0) || (e.deltaY > 0 && gallery.scrollLeft >= max - 1)) return;
+    e.preventDefault();
+    gallery.scrollLeft += e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
+  }, { passive: false });
+
+  var saved = null;
+  try { saved = localStorage.getItem('pg-view'); } catch (e) {}
+  if (saved === 'strip') setView('strip', false);
+
+  /* ---------- Full-screen viewer ---------- */
   var img = box.querySelector('[data-pg-img]');
   var caption = box.querySelector('[data-pg-lb-caption]');
   var counter = box.querySelector('[data-pg-counter]');
@@ -137,7 +348,7 @@
     img.classList.add('pg-loading');
     img.onload = function () { img.classList.remove('pg-loading'); };
     img.src = link.getAttribute('href');
-    img.alt = link.dataset.pgCaption || 'Photograph';
+    img.alt = link.querySelector('img').alt;
     caption.textContent = link.dataset.pgCaption || '';
     counter.textContent = (current + 1) + ' / ' + links.length;
     // Warm the cache for the neighbours so arrowing through feels instant.
@@ -157,18 +368,32 @@
     box.hidden = true;
     document.body.style.overflow = '';
     img.removeAttribute('src');
-    if (lastFocus) lastFocus.focus();
+    if (view === 'strip') scrollToItem(current, false); // land on the photo last viewed
+    if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
 
   links.forEach(function (link, i) {
-    link.addEventListener('click', function (e) { e.preventDefault(); open(i); });
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      // Scroll view: clicking a blurred neighbour brings it to the middle; the middle one opens.
+      if (view === 'strip' && i !== currentIndex()) scrollToItem(i, true);
+      else open(i);
+    });
   });
   box.querySelector('[data-pg-close]').addEventListener('click', close);
   box.querySelector('[data-pg-prev]').addEventListener('click', function () { show(current - 1); });
   box.querySelector('[data-pg-next]').addEventListener('click', function () { show(current + 1); });
   box.addEventListener('click', function (e) { if (e.target === box) close(); });
   document.addEventListener('keydown', function (e) {
-    if (box.hidden) return;
+    if (box.hidden) {
+      // Scroll view: arrow keys step through the row.
+      if (view === 'strip' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft') && !e.altKey && !e.metaKey &&
+          !/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || '')) {
+        e.preventDefault();
+        scrollToItem(currentIndex() + (e.key === 'ArrowRight' ? 1 : -1), true);
+      }
+      return;
+    }
     if (e.key === 'Escape') close();
     else if (e.key === 'ArrowRight') show(current + 1);
     else if (e.key === 'ArrowLeft') show(current - 1);

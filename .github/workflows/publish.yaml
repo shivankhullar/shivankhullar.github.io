@@ -42,6 +42,15 @@ jobs:
         key: ${{ runner.os }}-hugomod-${{ hashFiles('**/go.mod') }}
         restore-keys: |
           ${{ runner.os }}-hugomod-
+    # Keep Hugo's resized photo copies between deploys, so only new or changed photos are
+    # processed (re-making all of the Photography gallery takes minutes).
+    - name: Cache processed images
+      uses: actions/cache@v4
+      with:
+        path: resources/_gen
+        key: ${{ runner.os }}-hugo-images-${{ hashFiles('content/**/*.jpg', 'content/**/*.jpeg', 'content/**/*.png', 'assets/media/**', 'layouts/**/*.html') }}
+        restore-keys: |
+          ${{ runner.os }}-hugo-images-
     - name: Setup Pages
       id: pages
       uses: actions/configure-pages@v5

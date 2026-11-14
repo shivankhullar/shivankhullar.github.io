@@ -49,7 +49,21 @@ if [[ ! -x "$HUGO" ]]; then
 fi
 
 "$HUGO" version
-( sleep 3 && open "http://localhost:1313/" ) &
+echo
+echo "Building the site... The first run after adding photos takes 1-3 minutes while"
+echo "Hugo makes the web-sized copies (later runs reuse them and start in seconds)."
+echo "Your browser opens by itself when the site is ready."
+echo
+# Open the browser only once the server answers (up to 10 minutes).
+(
+  for _ in $(seq 1 600); do
+    if curl -s -o /dev/null --max-time 2 "http://localhost:1313/"; then
+      open "http://localhost:1313/"
+      exit 0
+    fi
+    sleep 1
+  done
+) &
 exec "$HUGO" server \
   --port 1313 \
   --buildDrafts --buildFuture \

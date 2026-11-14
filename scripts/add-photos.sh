@@ -1,56 +1,79 @@
 #!/bin/bash
-# Shrink DSLR photos and copy them into the website's Photography gallery.
+# Copy photos into the website's Photography gallery, shrunk to a web-friendly size.
 #
 # Usage (from anywhere):
-#   scripts/add-photos.sh ~/Pictures/DSLR/IMG_1234.JPG ~/Pictures/DSLR/IMG_5678.JPG ...
+#   scripts/add-photos.sh ~/Pictures/IMG_1234.JPG ~/Pictures/IMG_5678.HEIC ...
 #
-# Each photo is resized so its longest side is at most 3000 px and saved as a
-# JPEG at quality 85 (typically 1-2 MB instead of 10-30 MB), using macOS's
-# built-in `sips`. The originals are never modified. The website then makes its
-# own smaller WebP copies for visitors when it is built.
+# For each photo, using macOS's built-in `sips` (the originals are never modified):
+#   - JPG, PNG, TIFF and iPhone HEIC files are all accepted and saved as JPEG;
+#   - the longest side is shrunk to at most 3200 px (never enlarged), quality 88,
+#     typically 1.5-3 MB instead of 5-30 MB;
+#   - colours are converted to sRGB (iPhones shoot in Display P3, which would
+#     otherwise look washed out once the website re-encodes the photo);
+#   - GPS position and other camera metadata are removed from the copy (this
+#     repository is public), keeping only orientation, date and a copyright tag.
+# Files are named by the date the photo was taken (2024-07-21-img-3151.jpg).
 #
-# Files are numbered in the order given (01-, 02-, ...) continuing after the
-# photos already in the gallery, which sets their order on the page. Rename
-# them afterwards to reorder.
+# The script then prints a caption entry for each photo, with the month/year it
+# was taken (and its GPS position, if the camera recorded one, to help you name
+# the place). Paste these under `resources:` in content/photography/_index.md.
 
 set -euo pipefail
 
-MAX_EDGE=3000
-QUALITY=85
-DEST="$(cd "$(dirname "$0")/.." && pwd)/content/photography"
+MAX_EDGE=3200
+QUALITY=88
+SRGB="/System/Library/ColorSync/Profiles/sRGB Profile.icc"
+NOTICE="Copyright Shivan Khullar. All rights reserved."
+SCRIPTS="$(cd "$(dirname "$0")" && pwd)"
+DEST="$SCRIPTS/../content/photography"
 
 if [[ $# -eq 0 ]]; then
-  echo "Usage: $0 photo1.jpg [photo2.jpg ...]" >&2
+  echo "Usage: $0 photo1.jpg [photo2.heic ...]" >&2
   exit 1
 fi
 
 mkdir -p "$DEST"
-
-# Continue numbering after the highest existing NN- prefix (10# = read "08" as decimal).
-last=$(ls "$DEST" 2>/dev/null | grep -oE '^[0-9]+' | sort -n | tail -1 || true)
-n=$((10#${last:-0}))
+stubs=""
 
 for src in "$@"; do
   if [[ ! -f "$src" ]]; then
     echo "skip: $src (not found)" >&2
     continue
   fi
-  n=$((n + 1))
   name=$(basename "$src")
   base=$(printf '%s' "${name%.*}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
-  out="$DEST/$(printf '%02d' "$n")-${base}.jpg"
 
-  # Only shrink, never enlarge.
+  # Date taken (Spotlight metadata works for HEIC too); fall back to the file's date.
+  taken=$(mdls -raw -name kMDItemContentCreationDate "$src" 2>/dev/null || true)
+  [[ "$taken" == "(null)" || -z "$taken" ]] && taken=$(date -r "$src" '+%Y-%m-%d %H:%M:%S')
+  day=${taken:0:10}
+  out="$DEST/${day}-${base}.jpg"
+
+  args=(--matchTo "$SRGB" --setProperty format jpeg --setProperty formatOptions "$QUALITY")
   w=$(sips -g pixelWidth "$src" | awk '/pixelWidth/ {print $2}')
   h=$(sips -g pixelHeight "$src" | awk '/pixelHeight/ {print $2}')
   if (( w > MAX_EDGE || h > MAX_EDGE )); then
-    sips --resampleHeightWidthMax "$MAX_EDGE" --setProperty format jpeg \
-         --setProperty formatOptions "$QUALITY" "$src" --out "$out" >/dev/null
-  else
-    sips --setProperty format jpeg --setProperty formatOptions "$QUALITY" \
-         "$src" --out "$out" >/dev/null
+    args+=(--resampleHeightWidthMax "$MAX_EDGE")
   fi
+  sips "${args[@]}" "$src" --out "$out" >/dev/null
+  # The repo is public: remove GPS and other personal metadata from the copy.
+  python3 "$SCRIPTS/clean-exif.py" "$NOTICE" "$out"
 
-  printf '%-40s %6s -> %6s  %s\n' "$name" \
+  printf '%-36s %6s -> %6s  %s\n' "$name" \
     "$(du -h "$src" | cut -f1)" "$(du -h "$out" | cut -f1)" "$(basename "$out")"
+
+  month=$(date -j -f '%Y-%m-%d' "$day" '+%B %Y' 2>/dev/null || echo "$day")
+  lat=$(mdls -raw -name kMDItemLatitude "$src" 2>/dev/null || true)
+  lon=$(mdls -raw -name kMDItemLongitude "$src" 2>/dev/null || true)
+  gps=""
+  if [[ -n "$lat" && "$lat" != "(null)" ]]; then
+    gps=$(printf '   # GPS %.4f, %.4f' "$lat" "$lon")
+  fi
+  stubs+="  - src: $(basename "$out")"$'\n'"    title: PLACE${gps}"$'\n'"    params: { taken: $month }"$'\n'
 done
+
+if [[ -n "$stubs" ]]; then
+  echo
+  echo "Caption entries for content/photography/_index.md (replace PLACE):"
+  printf '%s' "$stubs"
+fi
