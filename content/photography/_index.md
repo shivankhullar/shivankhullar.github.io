@@ -25,47 +25,47 @@ shuffle: true
 # "CHECK" marks captions guessed from the photo itself (the Canon has no GPS).
 resources:
   - { src: 2026-10-24-img-6611.jpg, title: "Hudson Highlands, NY, USA", params: { taken: October 2026 } }
-  - { src: 2026-10-24-img-6596.jpg, title: "Hudson Highlands, NY, USA", params: { taken: October 2026 } }
-  - { src: 2026-09-01-img-6141.jpg, title: "Mount Hood from the air, OR, USA", params: { taken: September 2026 } }
+  - { src: 2026-10-24-img-6596.jpg, title: "Cold Spring, NY, USA", params: { taken: October 2026 } }
+  - { src: 2026-09-01-img-6141.jpg, title: "Mount Hood, OR, USA", params: { taken: September 2026 } }
   - { src: 2026-09-01-img-6128.jpg, title: "Multnomah Falls, OR, USA", params: { taken: September 2026 } }
   - { src: 2026-08-31-img-5516.jpg, title: "Cannon Beach, OR, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-31-img-5487.jpg, title: "Tillamook Rock Lighthouse from Ecola State Park, OR, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-31-img-5475.jpg, title: "Ecola State Park, OR, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-31-img-5487.jpg, title: "Tillamook Rock Lighthouse, OR, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-31-img-5475.jpg, title: "Crescent Beach, OR, USA", params: { taken: August 2026 } }  # CHECK
   - { src: 2026-08-31-img-5472.jpg, title: "Haystack Rock, Cannon Beach, OR, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-31-img-5470.jpg, title: "Cannon Beach from Ecola State Park, OR, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-30-img-5466.jpg, title: "Migrating birds", params: { taken: August 2026 } }  # CHECK: where?
-  - { src: 2026-08-30-img-5400.jpg, title: "Hoh Rain Forest, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-30-img-5398.jpg, title: "Hoh Rain Forest, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-30-img-5380.jpg, title: "Hoh Rain Forest, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-30-img-5365.jpg, title: "Hoh Rain Forest, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-30-img-5315.jpg, title: "Hoh Rain Forest, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-30-img-5313.jpg, title: "Hoh Rain Forest, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-29-img-5294.jpg, title: "Hurricane Ridge, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-29-img-5289.jpg, title: "Hurricane Ridge, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-29-img-5249.jpg, title: "Hurricane Ridge, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
-  - { src: 2026-08-29-img-5246.jpg, title: "Hurricane Ridge, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-31-img-5470.jpg, title: "Ecola State Park, OR, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-30-img-5466.jpg, title: "Sunset Beach, OR, USA", params: { taken: August 2026 } }  # CHECK: where?
+  - { src: 2026-08-30-img-5400.jpg, title: "Sol Duc Falls, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-30-img-5398.jpg, title: "Sol Duc Falls, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-30-img-5380.jpg, title: "Marymere Falls, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-30-img-5365.jpg, title: "Marymere Falls, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-30-img-5315.jpg, title: "Marymere Falls, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-30-img-5313.jpg, title: "Marymere Falls, Olympic National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-29-img-5294.jpg, title: "Paradise, Mt. Rainier National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-29-img-5289.jpg, title: "Paradise, Mt. Rainier National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-29-img-5249.jpg, title: "Paradise, Mt. Rainier National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
+  - { src: 2026-08-29-img-5246.jpg, title: "Skyline trail, Mt. Rainier National Park, WA, USA", params: { taken: August 2026 } }  # CHECK
   - { src: 2026-07-19-img-5213.jpg, title: "The Matterhorn, Zermatt, Switzerland", params: { taken: July 2026 } }
-  - { src: 2026-07-18-img-5178.jpg, title: "Swiss Alps, Switzerland", params: { taken: July 2026 } }  # CHECK: where?
-  - { src: 2026-07-18-img-5128.jpg, title: "Mountain pass road, Swiss Alps, Switzerland", params: { taken: July 2026 } }  # CHECK: which pass?
-  - { src: 2026-07-16-img-4945.jpg, title: "Lake Maggiore from Cardada, Switzerland", params: { taken: July 2026 } }
+  - { src: 2026-07-18-img-5178.jpg, title: "Lauterbrunnen, Switzerland", params: { taken: July 2026 } }  # CHECK: where?
+  - { src: 2026-07-18-img-5128.jpg, title: "Furka Pass, Switzerland", params: { taken: July 2026 } }  # CHECK: which pass?
+  - { src: 2026-07-16-img-4945.jpg, title: "Cardada, Switzerland", params: { taken: July 2026 } }
   - { src: 2026-07-16-img-5115.jpg, title: "Lake Maggiore, Switzerland", params: { taken: July 2026 } }
   - { src: 2026-07-16-img-5106.jpg, title: "Ticino, Switzerland", params: { taken: July 2026 } }  # CHECK
-  - { src: 2026-07-15-img-4830.jpg, title: "Ascona, Lake Maggiore, Switzerland", params: { taken: July 2026 } }
+  - { src: 2026-07-15-img-4830.jpg, title: "Ascona, Switzerland", params: { taken: July 2026 } }
   - { src: 2026-07-12-img-4924.jpg, title: "Switzerland", params: { taken: July 2026 } }  # CHECK: which lake?
-  - { src: 2026-06-26-img-4227.jpg, title: "Yosemite Valley, CA, USA", params: { taken: June 2026 } }
+  - { src: 2026-06-26-img-4227.jpg, title: "Yosemite National Park, CA, USA", params: { taken: June 2026 } }
   - { src: 2026-06-26-img-4143.jpg, title: "Mist Trail, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
   - { src: 2026-06-26-img-4060.jpg, title: "Vernal Fall, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
   - { src: 2026-06-24-img-3993.jpg, title: "Four Mile Trail, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
-  - { src: 2026-06-24-img-3911.jpg, title: "Yosemite Falls from Sentinel Dome, CA, USA", params: { taken: June 2026 } }
-  - { src: 2026-06-24-img-3850.jpg, title: "Half Dome from Glacier Point, Yosemite, CA, USA", params: { taken: June 2026 } }
-  - { src: 2026-06-24-img-3844.jpg, title: "Glacier Point, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
-  - { src: 2026-06-24-img-3835.jpg, title: "Four Mile Trail, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
+  - { src: 2026-06-24-img-3911.jpg, title: "Sentinel Dome, Yosemite, CA, USA", params: { taken: June 2026 } }
+  - { src: 2026-06-24-img-3850.jpg, title: "Half Dome, Yosemite, CA, USA", params: { taken: June 2026 } }
+  - { src: 2026-06-24-img-3844.jpg, title: "Four Mile Trail, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
+  - { src: 2026-06-24-img-3835.jpg, title: "El Capitan, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
   - { src: 2026-06-22-img-3694.jpg, title: "Yosemite Valley, CA, USA", params: { taken: June 2026 } }
-  - { src: 2026-06-22-img-3621.jpg, title: "Yosemite Falls Trail, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
-  - { src: 2026-06-22-img-3592.jpg, title: "Yosemite Falls Trail, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
-  - { src: 2026-06-22-img-3553.jpg, title: "Half Dome from the Yosemite Falls Trail, CA, USA", params: { taken: June 2026 } }
+  - { src: 2026-06-22-img-3621.jpg, title: "Upper Yosemite Falls, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
+  - { src: 2026-06-22-img-3592.jpg, title: "Upper Yosemite Falls, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
+  - { src: 2026-06-22-img-3553.jpg, title: "Half Dome, CA, USA", params: { taken: June 2026 } }
   - { src: 2026-06-21-img-3404.jpg, title: "Hetch Hetchy, Yosemite National Park, CA, USA", params: { taken: June 2026 } }
-  - { src: 2026-06-21-img-3349.jpg, title: "Lake McClure, CA, USA", params: { taken: June 2026 } }
+  - { src: 2026-06-21-img-3349.jpg, title: "Merced River, CA, USA", params: { taken: June 2026 } }
   - { src: 2026-06-20-img-3325.jpg, title: "General Sherman Tree, Sequoia National Park, CA, USA", params: { taken: June 2026 } }
   - { src: 2026-06-20-img-3307.jpg, title: "Giant Forest, Sequoia National Park, CA, USA", params: { taken: June 2026 } }
   - { src: 2026-01-03-img-1946.jpg, title: "National Mall, Washington, DC, USA", params: { taken: January 2026 } }
@@ -73,17 +73,17 @@ resources:
   - { src: 2025-12-21-img-1648.jpg, title: "New York City, NY, USA", params: { taken: December 2025 } }
   - { src: 2025-11-02-img-1217.jpg, title: "Sedona, AZ, USA", params: { taken: November 2025 } }
   - { src: 2025-11-02-img-1209.jpg, title: "Sedona, AZ, USA", params: { taken: November 2025 } }
-  - { src: 2025-11-01-img-0947.jpg, title: "Near Page, AZ, USA", params: { taken: November 2025 } }
-  - { src: 2025-07-26-img-4533.jpg, title: "Observation wheel", params: { taken: July 2025 } }  # CHECK: where?
-  - { src: 2025-06-30-img-4354.jpg, title: "Sunset, BC, Canada", params: { taken: June 2025 } }  # CHECK
-  - { src: 2025-06-29-img-4190.jpg, title: "British Columbia, Canada", params: { taken: June 2025 } }  # CHECK
+  - { src: 2025-11-01-img-0947.jpg, title: "Page, AZ, USA", params: { taken: November 2025 } }
+  - { src: 2025-07-26-img-4533.jpg, title: "Montreal, QC, Canada", params: { taken: July 2025 } }  # CHECK: where?
+  - { src: 2025-06-30-img-4354.jpg, title: "Vancouver Island, BC, Canada", params: { taken: June 2025 } }  # CHECK
+  - { src: 2025-06-29-img-4190.jpg, title: "Forest in BC, Canada", params: { taken: June 2025 } }  # CHECK
   - { src: 2025-06-29-img-4165.jpg, title: "Whistler, BC, Canada", params: { taken: June 2025 } }  # CHECK
   - { src: 2025-06-28-img-4076.jpg, title: "Brandywine Falls, BC, Canada", params: { taken: June 2025 } }
-  - { src: 2025-06-28-img-4074.jpg, title: "British Columbia, Canada", params: { taken: June 2025 } }  # CHECK
-  - { src: 2025-06-27-img-4015.jpg, title: "Howe Sound, BC, Canada", params: { taken: June 2025 } }  # CHECK
-  - { src: 2025-06-27-img-4001.jpg, title: "Howe Sound, BC, Canada", params: { taken: June 2025 } }  # CHECK
-  - { src: 2025-06-27-img-3989.jpg, title: "Howe Sound, BC, Canada", params: { taken: June 2025 } }  # CHECK
-  - { src: 2025-06-27-img-3987.jpg, title: "Howe Sound, BC, Canada", params: { taken: June 2025 } }  # CHECK
+  - { src: 2025-06-28-img-4074.jpg, title: "Somewhere in BC, Canada", params: { taken: June 2025 } }  # CHECK
+  - { src: 2025-06-27-img-4015.jpg, title: "Furry Creek, BC, Canada", params: { taken: June 2025 } }  # CHECK
+  - { src: 2025-06-27-img-4001.jpg, title: "Furry Creek, BC, Canada", params: { taken: June 2025 } }  # CHECK
+  - { src: 2025-06-27-img-3989.jpg, title: "Furry Creek, BC, Canada", params: { taken: June 2025 } }  # CHECK
+  - { src: 2025-06-27-img-3987.jpg, title: "Furry Creek, BC, Canada", params: { taken: June 2025 } }  # CHECK
   - { src: 2025-06-27-img-3952.jpg, title: "Alice Lake Provincial Park, BC, Canada", params: { taken: June 2025 } }  # CHECK
   - { src: 2025-06-27-img-3945.jpg, title: "Alice Lake Provincial Park, BC, Canada", params: { taken: June 2025 } }  # CHECK
   - { src: 2025-06-27-img-3931.jpg, title: "Alice Lake Provincial Park, BC, Canada", params: { taken: June 2025 } }  # CHECK
