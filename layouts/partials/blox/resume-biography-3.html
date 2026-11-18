@@ -26,90 +26,130 @@
     phones/tablets:             profile -> About Me + buttons -> interests/education
 */}}
 <div class="resume-biography bio3 px-3">
-  <div class="bio3-profile">
+  {{/* Photo, name and education move as one block on laptops, so it and About Me can each sit the
+       same distance from the centre. On phones the wrapper is ignored (display: contents), so the
+       order stays profile -> About Me -> education. */}}
+  <div class="bio3-left">
+    <div class="bio3-profile">
 
-  {{ $img := "" }}
-  {{with $block.design.banner.filename}}
-  {{- $img = resources.Get (path.Join "media" .) -}}
-  {{ if $img }}
-    {{- $img = $img.Process "webp" -}}
-    <div class="w-full bg-gray-200 dark:bg-gray-900 flex flex-wrap items-center justify-center">
-      <div class="w-full bg-gray rounded dark:bg-gray-800">
-        <div class="h-2/4 sm:h-64 overflow-hidden w-full">
-          <img class="w-full object-cover"
-               src="{{$img.RelPermalink}}"
-               width="{{$img.Width}}" height="{{$img.Height}}"
-               alt="" />
+    {{ $img := "" }}
+    {{with $block.design.banner.filename}}
+    {{- $img = resources.Get (path.Join "media" .) -}}
+    {{ if $img }}
+      {{- $img = $img.Process "webp" -}}
+      <div class="w-full bg-gray-200 dark:bg-gray-900 flex flex-wrap items-center justify-center">
+        <div class="w-full bg-gray rounded dark:bg-gray-800">
+          <div class="h-2/4 sm:h-64 overflow-hidden w-full">
+            <img class="w-full object-cover"
+                 src="{{$img.RelPermalink}}"
+                 width="{{$img.Width}}" height="{{$img.Height}}"
+                 alt="" />
+          </div>
         </div>
       </div>
-    </div>
-  {{ end }}
-  {{ end }}
-
-  <div id="profile" class="flex justify-center items-center flex-col">
-    {{ if $avatar }}
-
-    <div class="avatar-wrapper {{ if $img }}-mt-[105px]{{else}}mt-10{{end}}">
-      {{/* Shown at 150x150, but also made at 2x and 3x so it stays sharp on high-density (Retina/phone) screens. */}}
-      {{ $avatar_image := $avatar.Fill "150x150 Center q90" }}
-      {{ $avatar_2x := $avatar.Fill "300x300 Center webp q90" }}
-      {{ $avatar_3x := $avatar.Fill "450x450 Center webp q90" }}
-      <img class="avatar rounded bg-white dark:bg-gray-800 p-1" src="{{ $avatar_image.RelPermalink }}" alt="{{$person_page.Title}}"
-            srcset="{{ $avatar_image.RelPermalink }} 1x, {{ $avatar_2x.RelPermalink }} 2x, {{ $avatar_3x.RelPermalink }} 3x"
-            width="{{ $avatar_image.Width }}" height="{{ $avatar_image.Height }}">
-      {{with $person.status.icon}}<span class="avatar-emoji">{{.|emojify}}</span>{{end}}
-    </div>
+    {{ end }}
     {{ end }}
 
-    <div class="portrait-title dark:text-white">
+    <div id="profile" class="flex justify-center items-center flex-col">
+      {{ if $avatar }}
 
-      <div class="text-3xl font-bold mb-2 mt-6">
-        {{- if $person.name_pronunciation -}}
-          <ruby>
-            <rb>{{ $person_page.Title }}</rb>
-            <rt>{{ $person.name_pronunciation }}</rt>
-          </ruby>
-        {{- else -}}
-          {{- $person_page.Title -}}
-        {{- end -}}
-      </div>
-
-      {{ with $person.role }}<h3 class="font-semibold mb-1">{{ . | markdownify | emojify }}</h3>{{ end }}
-
-      {{ range $person.organizations }}
-      <div class="mb-2">
-        {{ with .url }}<a href="{{ . }}" target="_blank" rel="noopener">{{ end }}
-        <div>{{ .name }}</div>
-        {{ if .url }}</a>{{ end }}
+      <div class="avatar-wrapper {{ if $img }}-mt-[105px]{{else}}mt-10{{end}}">
+        {{/* Shown at 200x200 (up to ~260px on big screens, see the script at the end); the larger copies keep it sharp
+           on high-density (Retina/phone) screens. */}}
+        {{ $avatar_image := $avatar.Fill "200x200 Center q90" }}
+        {{ $avatar_1x := $avatar.Fill "300x300 Center webp q90" }}
+        {{ $avatar_2x := $avatar.Fill "600x600 Center webp q90" }}
+        <img class="avatar rounded bg-white dark:bg-gray-800 p-1" src="{{ $avatar_image.RelPermalink }}" alt="{{$person_page.Title}}"
+              srcset="{{ $avatar_1x.RelPermalink }} 1x, {{ $avatar_2x.RelPermalink }} 2x"
+              width="{{ $avatar_image.Width }}" height="{{ $avatar_image.Height }}">
+        {{with $person.status.icon}}<span class="avatar-emoji">{{.|emojify}}</span>{{end}}
       </div>
       {{ end }}
+
+      <div class="portrait-title dark:text-white">
+
+        <div class="text-3xl font-bold mb-2 mt-6">
+          {{- if $person.name_pronunciation -}}
+            <ruby>
+              <rb>{{ $person_page.Title }}</rb>
+              <rt>{{ $person.name_pronunciation }}</rt>
+            </ruby>
+          {{- else -}}
+            {{- $person_page.Title -}}
+          {{- end -}}
+        </div>
+
+        {{ with $person.role }}<h3 class="font-semibold mb-1">{{ . | markdownify | emojify }}</h3>{{ end }}
+
+        {{ range $person.organizations }}
+        <div class="mb-2">
+          {{ with .url }}<a href="{{ . }}" target="_blank" rel="noopener">{{ end }}
+          <div>{{ .name }}</div>
+          {{ if .url }}</a>{{ end }}
+        </div>
+        {{ end }}
+      </div>
+
+      <ul class="network-icon dark:text-zinc-100">
+        {{ range $person.profiles }}
+        {{ $pack := or .icon_pack "fas" }}
+        {{ $pack_prefix := $pack }}
+        {{ if in (slice "fab" "fas" "far" "fal") $pack }}
+          {{ $pack_prefix = "fa" }}
+        {{ end }}
+        {{ $link := .url | default .link }}
+        {{ $scheme := (urls.Parse $link).Scheme }}
+        {{ $target := "" }}
+        {{ if not $scheme }}
+          {{ $link = (.url | default .link) | relLangURL }}
+          {{ if eq (path.Ext $link) ".pdf" }}{{ $target = "target=\"_blank\" rel=\"noopener\"" }}{{ end }}
+        {{ else if in (slice "http" "https") $scheme }}
+          {{ $target = "target=\"_blank\" rel=\"noopener\"" }}
+        {{ end }}
+        <li>
+          <a href="{{ $link | safeURL }}" {{ $target | safeHTMLAttr }} aria-label="{{ .icon }}"
+             {{ with .label }} data-toggle="tooltip" data-placement="top" title="{{.}}"{{ end }}>
+            {{ partial "functions/get_icon" (dict "name" .icon "attributes" "style=\"height: 1.5rem;\"")  }}
+          </a>
+        </li>
+        {{ end }}
+      </ul>
+    </div>
     </div>
 
-    <ul class="network-icon dark:text-zinc-100">
-      {{ range $person.profiles }}
-      {{ $pack := or .icon_pack "fas" }}
-      {{ $pack_prefix := $pack }}
-      {{ if in (slice "fab" "fas" "far" "fal") $pack }}
-        {{ $pack_prefix = "fa" }}
+    <div class="bio3-details dark:text-white-300">
+
+      {{ with $person.education }}
+      <div class="">
+        <div class="section-subheading mb-3">{{ i18n "education" | markdownify }}</div>
+        <ul class="">
+          {{ range . }}
+          <li class="flex items-start gap-3">
+            {{ partial "functions/get_icon" (dict "name" "academic-cap" "attributes" "style=\"\" class='flex-shrink-0 w-5 h-5 me-2 mt-1'") }}
+            <div class="description">
+              <p class="course">{{ .area }}{{ with .year }}, {{ . }}{{ end }}</p>
+              <p class="text-sm">{{ .institution }}</p>
+            </div>
+          </li>
+          {{ end }}
+        </ul>
+      </div>
       {{ end }}
-      {{ $link := .url | default .link }}
-      {{ $scheme := (urls.Parse $link).Scheme }}
-      {{ $target := "" }}
-      {{ if not $scheme }}
-        {{ $link = (.url | default .link) | relLangURL }}
-        {{ if eq (path.Ext $link) ".pdf" }}{{ $target = "target=\"_blank\" rel=\"noopener\"" }}{{ end }}
-      {{ else if in (slice "http" "https") $scheme }}
-        {{ $target = "target=\"_blank\" rel=\"noopener\"" }}
+
+      {{ with $person.interests }}
+      <div class="">
+        <div class="section-subheading mb-3">{{ i18n "interests" | markdownify }}</div>
+        <ul class="list-disc list-inside space-y-1 pl-5">
+          {{ range . }}
+          <li>
+            {{ . | markdownify | emojify }}
+          </li>
+          {{ end }}
+        </ul>
+      </div>
       {{ end }}
-      <li>
-        <a href="{{ $link | safeURL }}" {{ $target | safeHTMLAttr }} aria-label="{{ .icon }}"
-           {{ with .label }} data-toggle="tooltip" data-placement="top" title="{{.}}"{{ end }}>
-          {{ partial "functions/get_icon" (dict "name" .icon "attributes" "style=\"height: 1.5rem;\"")  }}
-        </a>
-      </li>
-      {{ end }}
-    </ul>
-  </div>
+
+    </div>
   </div>
 
   <div class="bio3-about">
@@ -136,40 +176,6 @@
     </div>
   </div>
 
-  <div class="bio3-details dark:text-white-300">
-
-    {{ with $person.education }}
-    <div class="">
-      <div class="section-subheading mb-3">{{ i18n "education" | markdownify }}</div>
-      <ul class="">
-        {{ range . }}
-        <li class="flex items-start gap-3">
-          {{ partial "functions/get_icon" (dict "name" "academic-cap" "attributes" "style=\"\" class='flex-shrink-0 w-5 h-5 me-2 mt-1'") }}
-          <div class="description">
-            <p class="course">{{ .area }}{{ with .year }}, {{ . }}{{ end }}</p>
-            <p class="text-sm">{{ .institution }}</p>
-          </div>
-        </li>
-        {{ end }}
-      </ul>
-    </div>
-    {{ end }}
-
-    {{ with $person.interests }}
-    <div class="">
-      <div class="section-subheading mb-3">{{ i18n "interests" | markdownify }}</div>
-      <ul class="list-disc list-inside space-y-1 pl-5">
-        {{ range . }}
-        <li>
-          {{ . | markdownify | emojify }}
-        </li>
-        {{ end }}
-      </ul>
-    </div>
-    {{ end }}
-
-  </div>
-
 </div>
 
 <style>
@@ -181,7 +187,13 @@
     justify-content: center;
   }
   .bio3-profile { grid-area: profile; }
-  .bio3-about   { grid-area: about; max-width: 65ch; justify-self: center; }
+  /* The theme fixes the avatar box at 150x150; let it fit the larger (200px) photo instead. */
+  .bio3 .avatar-wrapper { width: fit-content; height: auto; }
+  .bio3 .avatar-wrapper .avatar {
+    display: block; max-width: none; max-height: none;
+    width: calc(200px + .5rem); height: calc(200px + .5rem); /* 200px photo + the 4px frame (p-1) */
+  }
+  .bio3-about  { grid-area: about; max-width: 65ch; justify-self: center; }
   .bio3-details {
     grid-area: details;
     display: grid;
@@ -193,37 +205,77 @@
   .bio3-about .bio-text > :first-child { margin-top: 0; }
   .bio3-about .prose { padding-top: 0; }
 
+  .bio3-left { display: contents; }
+
   @media (min-width: 1024px) {
-    /* Two equal halves, matching the background: left = simulation, right = JWST image. */
+    /* Two equal halves, matching the background (left = simulation, right = JWST image). The left
+       block hugs the centre line from the left and About Me from the right, both --bio3-gap away from
+       it, so they stay equidistant from the centre at every window width. */
     .bio3 {
+      --bio3-gap: 3rem;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-areas: "profile about" "details about";
+      grid-template-areas: "left about";
       column-gap: 0;
-      row-gap: 2rem;
       justify-content: stretch;
+      align-items: center;
     }
-    .bio3-profile { justify-self: center; width: 100%; max-width: 40rem; padding: 0 2rem; }
-    /* Interests + Education use the full left half so the degrees fit on one line. */
-    /* Shrink to fit the content and centre it in the left half, under the profile. Education may
-       shrink (and wrap) only when the half is too narrow for it. */
+    /* Photo, name and education: shrink to fit and stack, centred over one another. */
+    .bio3-left {
+      grid-area: left; justify-self: end;
+      display: flex; flex-direction: column; align-items: center; gap: 2rem;
+      width: fit-content; max-width: calc(100% - var(--bio3-gap)); margin-right: var(--bio3-gap);
+    }
+    .bio3-profile { max-width: 100%; }
+    /* Education may shrink (and wrap) only when the half is too narrow for it. */
     .bio3-details {
-      justify-self: center; width: fit-content; max-width: 100%; padding: 0 1rem; column-gap: 1.5rem;
+      width: fit-content; max-width: 100%; column-gap: 1.5rem;
       grid-template-columns: minmax(0, max-content) max-content;
     }
     .bio3-details li svg { margin-inline-end: 0; }
     .bio3-details li.flex { gap: .5rem; }
     .bio3-details ul.list-disc { padding-left: .25rem; }
     .bio3-details p.course, .bio3-details ul.list-disc li { font-size: .9rem; }
-    .bio3-about { padding: 0 3rem; }
+    .bio3-about {
+      justify-self: start; margin-left: var(--bio3-gap);
+      max-width: min(65ch, calc(100% - var(--bio3-gap)));
+    }
     /* Centre the whole intro vertically between the navbar and the footer (this <style> is only on the
        homepage). The theme already stretches .page-body to fill the window; centre its content, and
        pull the footer down from its 6rem top margin so it sits near the bottom of the window. */
     .page-body { display: flex; flex-direction: column; justify-content: center; }
     .page-footer footer { margin-top: 0; }
-    /* Start the left column exactly at the top of the avatar, so centring is measured from there
+    /* Start the left block exactly at the top of the avatar, so centring is measured from there
        (the theme otherwise adds 30px of padding and a 40px margin above the avatar). */
     .bio3 #profile { padding-top: 0; padding-bottom: 0; }
     .bio3 .avatar-wrapper { margin-top: 0; }
-    .bio3-about { align-self: center; justify-self: center; }
   }
 </style>
+<script>
+  /* Laptops and wider: scale the whole intro (text, photo and spacing) to suit the window. Big screens
+     get it a little larger so the page doesn't look sparse; short windows get it smaller, just enough
+     that the homepage fits without scrolling. Phones are left alone (they scroll anyway). */
+  (function () {
+    var bio = document.querySelector('.bio3');
+    if (!bio) return;
+    var wide = window.matchMedia('(min-width: 1024px)');
+    function fit() {
+      if (!wide.matches) { bio.style.zoom = ''; return; }
+      var w = window.innerWidth;
+      var z = w >= 2400 ? 1.3 : w >= 1920 ? 1.18 : w >= 1600 ? 1.08 : 1;
+      bio.style.zoom = z;
+      // Shrink until nothing overflows the window (a few passes, since text can re-wrap).
+      for (var i = 0; i < 4; i++) {
+        var extra = document.documentElement.scrollHeight - window.innerHeight;
+        if (extra <= 0) break;
+        var h = bio.getBoundingClientRect().height;
+        z = Math.max(0.7, z * (h - extra - 4) / h);
+        bio.style.zoom = z;
+        if (z === 0.7) break;
+      }
+    }
+    fit();
+    window.addEventListener('resize', fit);
+    window.addEventListener('load', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  })();
+</script>
